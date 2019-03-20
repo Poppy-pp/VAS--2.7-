@@ -1,0 +1,416 @@
+<template>
+	<div class="vas_login">
+		<login v-if="loginType == 1" ref="login" @handleSubmit="handleSubmit" @qqLogin="qqLogin" @wxLogin="wxLogin" @getCode="getCode" @checkCode="checkCode" @checkMoblie="checkMoblie" @forgetClose="forgetClose" @rememberMeHandel="rememberMeHandel" @forgetPwsSubmit="forgetPwsSubmit" @editPswSubmit="editPswSubmit">
+		</login>
+		<mobilebBinding v-if="loginType == 2" ref="login" @getCode="getCode" @checkCode="checkCode" @checkMoblie="checkMoblie" @editQQPswSubmit="editQQPswSubmit">
+		</mobilebBinding>
+	</div>
+</template>
+
+<script>
+	import axios from 'axios';
+	import Qs from 'qs';
+	export default {
+		//@三个不同登录页面:login_simple,loginDesk_simple,login_gis
+		components: {
+			Login: resolve => {
+				require(['components/login/login_simple'], resolve)
+			},
+			mobilebBinding: resolve => {
+				require(['components/login/mobilebBinding'], resolve)
+			} //懒加载
+		},
+		data() {
+			return {
+				loginType:1,
+				updateIndex:0,
+				openid:'',
+				wxopenid:''
+			};
+		},
+		methods: {
+			//忘记密码窗口关闭 初始化步骤
+			forgetClose() {
+				let _this = this.$refs.login;
+				_this.pswForm = {
+					mobile: '',
+					new_pwd: '',
+					code: ''
+				};
+				_this.djTime = 60;
+				_this.isGetCode = false;
+				_this.editPswLoading = false;
+				_this.forgetActive = 1;
+				if(_this.interval) clearInterval(_this.interval);
+			},
+			//检查验证码是否正确
+			checkCode() {
+				let _this = this.$refs.login;
+				_this.$refs.pswForm.validate((valid) => {
+					if(valid) {
+						_this.editPswLoading = true;
+						axios.get('/vasms-web/validate?mobile=' + _this.pswForm.mobile + '&number=' + _this.pswForm.code)
+							.then((res) => {
+								_this.editPswLoading = false;
+								if(res.data.result.code == 0) {
+									_this.forgetActive = 3;
+								} else {
+									this.$message({
+										message: res.data.result.desc,
+										type: 'error'
+									});
+								}
+							});
+					}
+				});
+			},
+			//检查账户名是否存在
+			checkMoblie() {
+				let _this = this.$refs.login;
+				_this.$refs.pswForm.validate((valid) => {
+					if(valid) {
+						_this.editPswLoading = true;
+						axios.get('/vasms-web/isExit?content=' + _this.pswForm.mobile)
+							.then((res) => {
+								_this.editPswLoading = false;
+								if(res.data.result.code == 0) {
+									_this.pswForm.mobile = res.data.data;
+									_this.forgetActive = 2;
+								} else {
+									this.$message({
+										message: res.data.result.desc,
+										type: 'error'
+									});
+								}
+							});
+					}
+				});
+			},
+			//获取手机验证码
+			getCode() {
+				let _this = this.$refs.login;
+				axios.get('/vasms-web/getSms?mobile=' + _this.pswForm.mobile)
+					.then((res) => {
+						if(res.data.result.code == 0) {
+							this.$message({
+								message: res.data.data,
+								type: 'success'
+							});
+						} else {
+							this.$message({
+								message: res.data.result.desc,
+								type: 'error'
+							});
+						}
+					});
+			},
+			// 微信登陆
+			wxLogin(){
+				// let wxAppId = 'wx73d97eb200266883', // 上面申请得到的appid
+			 //    	wxAuthPath = 'http://www.wwvas.com/module/login.html';// 前面设置的回调地址
+				// location.href = `https://open.weixin.qq.com/connect/qrconnect?appid=${wxAppId}&redirect_uri=${encodeURIComponent(wxAuthPath)}&response_type=code&scope=snsapi_login&state=77944#wechat_redirect`;
+			},
+			/**
+			 * 封装一个居中打开新窗口的方法
+			 */
+			qqLogin() {
+			    // let qqAppId = '101465852', // 上面申请得到的appid
+			    // qqAuthPath = 'http://www.wwvas.com/module/login.html';// 前面设置的回调地址
+			    // location.href = `https://graph.qq.com/oauth2.0/authorize?response_type=token&client_id=${qqAppId}&redirect_uri=${encodeURIComponent(qqAuthPath)}`;
+			},
+			//判断用户是否登陆
+			rememberMeHandel() {
+				let _this = this.$refs.login,
+					user = JSON.parse(localStorage.getItem('rememberUser'));
+				this.threeLogin_qq();//子登录页面加载完成 父类调用登录方法
+				this.threeLogin_wx();
+				if(user != undefined) {//当用户登陆成功，存在时
+					_this.checked = user.remember_me;
+					_this.account = {
+						username: user.name,
+						password: user.psw,
+						remember_me: true
+					}
+				} else {
+					_this.account = {
+						username: '',
+						password: '',
+						remember_me: true
+					}
+				}
+			},
+			/*打开忘记密码窗口*/
+			forgetPwsSubmit() {
+				let _this = this.$refs.login;
+				_this.editPswDialogVisible = true;
+			},
+			/*第三方登录授权 —— 验证身份信息*/
+			editQQPswSubmit(){
+				let _this = this.$refs.login;
+				_this.$refs.pswForm.validate((valid) => {
+					if(valid) {
+						_this.editPswLoading = true;
+						if (this.getQueryString('access_token')) {//当是登陆QQ端时
+							axios.get('/vasms-web/qq/qqvalidate?mobile='+_this.pswForm.mobile+'&qqopenedid='+this.openid+'&number='+_this.pswForm.code)
+							.then((res) => {
+								_this.editPswLoading = false;
+								if(res.data.result.code == 0) {
+									/**请求对应用户的权限信息 并且存储导航树信息**/
+									axios.get(`/vasms-web/api/v1/sys/sysResourceInfo/currentResource`, {
+										headers: {
+											token: res.data.data.token
+										}
+									}).then((res) => {
+										if(res.data) {
+											sessionStorage.setItem('routes', JSON.stringify(res.data.data));
+											sessionStorage.setItem('isPrompt', 1);
+											sessionStorage.setItem('noMenu', _this.noMenu);
+											location.href = "Home.html";
+										}
+									});
+									/**存储用户信息**/
+									sessionStorage.setItem('user', JSON.stringify(res.data.data));
+								} else {
+									// window.location.href="/module/login.html"
+								}
+							}).catch((error) => {
+								// _this.editPswLoading = false;
+								// this.$message({
+								// 	message: '该账号已被注册，请直接登陆！',
+								// 	type: 'error'
+								// });
+								// window.location.href="/module/login.html"
+							});
+						}else{//登陆微信端时
+							axios.get('/vasms-web/wx/wxvalidate?mobile='+_this.pswForm.mobile+'&wxopenedid='+this.wxopenid+'&number='+_this.pswForm.code)
+							.then((res) => {
+								_this.editPswLoading = false;
+								if(res.data.result.code == 0) {
+									/**请求对应用户的权限信息 并且存储导航树信息**/
+									axios.get(`/vasms-web/api/v1/sys/sysResourceInfo/currentResource`, {
+										headers: {
+											token: res.data.data.token
+										}
+									}).then((res) => {
+										if(res.data) {
+											sessionStorage.setItem('routes', JSON.stringify(res.data.data));
+											sessionStorage.setItem('isPrompt', 1);
+											sessionStorage.setItem('noMenu', _this.noMenu);
+											location.href = "Home.html";
+										}
+									});
+									/**存储用户信息**/
+									sessionStorage.setItem('user', JSON.stringify(res.data.data));
+								} else {
+									// window.location.href="/module/login.html"
+								}
+							}).catch((error) => {
+								_this.editPswLoading = false;
+								// window.location.href="/module/login.html"
+							});
+						}
+						
+					}
+				});
+			},
+			/*忘记密码，密码重置*/
+			editPswSubmit() {
+				let _this = this.$refs.login;
+				_this.$refs.pswForm.validate((valid) => {
+					if(valid) {
+						_this.editPswLoading = true;
+						let pswFormSun = {
+							mobile: _this.pswForm.mobile,
+							new_pwd: _this.pswForm.new_pwd
+						};
+						axios.post('/vasms-web/forgetPwd', pswFormSun)
+							.then((res) => {
+								_this.editPswLoading = false;
+								if(res.data.result.code == 4001) {
+									this.$message({
+										message: '密码找回失败！' + res.data.result.desc,
+										type: 'error'
+									});
+									return;
+								}
+								if(res.data.result.code == 5001) {
+									this.$message({
+										message: '密码找回失败！' + res.data.result.desc,
+										type: 'error'
+									});
+									return;
+								} else {
+									this.$message({
+										message: '密码找回成功！',
+										type: 'success'
+									});
+									_this.editPswDialogVisible = false;
+								}
+							}).catch((error) => {
+								_this.editPswLoading = false;
+								this.$message({
+									message: '密码找回失败！' + error,
+									type: 'error'
+								});
+							});
+					}
+				});
+			},
+			//用户登陆
+			handleSubmit() {
+				var _this = this.$refs.login;
+				_this.$refs.account.validate((valid) => {
+					if(valid) {
+						_this.logining = true;
+						axios.post('/vasms-web/login', Qs.stringify(_this.account))
+							.then((res) => {
+								if(res.data.result.code != 0) {
+									this.$message({
+										message: '登录失败！' + res.data.result.desc,
+										type: 'error'
+									});
+									_this.logining = false;
+								} else {
+									/**请求对应用户的权限信息 并且存储导航树信息**/
+									axios.get(`/vasms-web/api/v1/sys/sysResourceInfo/currentResource`, {
+										headers: {
+											token: res.data.data.token
+										}
+									}).then((res) => {
+										if(res.data) {
+											sessionStorage.setItem('routes', JSON.stringify(res.data.data));
+											sessionStorage.setItem('account', JSON.stringify(_this.account));
+											sessionStorage.setItem('isPrompt', 1);
+											sessionStorage.setItem('noMenu', _this.noMenu);
+											location.href = "Home.html";
+											this.$message({
+												message: '登陆成功!',
+												type: 'success'
+											});
+											_this.logining = false;
+										}
+									});
+
+									/**存储用户信息**/
+									sessionStorage.setItem('user', JSON.stringify(res.data.data));
+									if(_this.checked) {
+										let user = {
+											name: _this.account.username,
+											psw: _this.account.password,
+											remember_me: _this.checked
+										};
+										localStorage.setItem('rememberUser', JSON.stringify(user));
+									} else {
+										var user = JSON.parse(localStorage.getItem('rememberUser'));
+										if(user != undefined) localStorage.removeItem('rememberUser');
+									}
+								}
+							}).catch((error) => {
+								_this.logining = false;
+								this.$message({
+									message: '登录失败！' + error,
+									type: 'error'
+								});
+							});
+					}
+				});
+			},
+			//获取QQ第三方授权成功后的 token值
+			getQueryString(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+				var r = window.location.hash.substr(1).match(reg);
+				if(r != null) return unescape(r[2]);
+				return null;
+			},
+			//第三方登录 qq
+			threeLogin_qq(){
+				let access_token = this.getQueryString('access_token');
+				if(access_token){
+					this.loginType = 4
+					let _this = this.$refs.login;
+					axios.get('/vasms-web/qq/qq_login?access_token='+access_token)
+					.then((res) => {
+						if(res.data.result.code == 999999) {
+							this.openid = res.data.result.desc;
+							this.loginType = 2;
+						} else {
+							/**请求对应用户的权限信息 并且存储导航树信息**/
+							axios.get(`/vasms-web/api/v1/sys/sysResourceInfo/currentResource`, {
+								headers: {
+									token: res.data.data.token
+								}
+							}).then((res) => {
+								if(res.data) {
+									sessionStorage.setItem('routes', JSON.stringify(res.data.data));
+									sessionStorage.setItem('isPrompt', 1);
+									sessionStorage.setItem('noMenu', _this.noMenu);
+									location.href = "Home.html";
+								}
+							});
+							/**存储用户信息**/
+							sessionStorage.setItem('user', JSON.stringify(res.data.data));
+						}
+					}).catch((error) => {
+						window.location.href="/module/login.html"
+					});
+				}
+			},
+			// 获取微信路径
+			getQueryStringWX() {
+				if (window.location.href.split("?")[1] == undefined) return;//当登录页路劲只有一项时
+			            var qs = window.location.href.split("?")[1]; //取得问号后面的url
+			            var items = qs.length ? qs.split("&") : [];//url分割，取的每一项
+			            
+			            var args = {};//创建保存数据的空对象
+			            var item, key, value;
+
+			            for (var i = 0; i < items.length; i++) {//遍历每一项，并用等号切割
+			                item = items[i].split("=");
+			                key = decodeURIComponent(item[0]);
+			                value = decodeURIComponent(item[1]);
+			                if (key.length) {//对象形式存储
+			                    args[key] = value;
+			                }
+			            }
+			            return args;
+			},
+			//第三方登录 wx
+			threeLogin_wx(){
+				if (this.getQueryStringWX() == undefined) return;//当登录页路劲只有一项时
+				let code = this.getQueryStringWX().code;
+				if(code){
+					this.loginType = 4
+					let _this = this.$refs.login;
+					axios.get('/vasms-web/wx/wx_login?code='+code)
+					.then((res) => {
+						if(res.data.result.code == 999999) {
+							this.wxopenid = res.data.result.desc;
+							this.loginType = 2;
+						} else {
+							/**请求对应用户的权限信息 并且存储导航树信息**/
+							axios.get(`/vasms-web/api/v1/sys/sysResourceInfo/currentResource`, {
+								headers: {
+									token: res.data.data.token
+								}
+							}).then((res) => {
+								if(res.data) {
+									sessionStorage.setItem('routes', JSON.stringify(res.data.data));
+									sessionStorage.setItem('isPrompt', 1);
+									sessionStorage.setItem('noMenu', _this.noMenu);
+									location.href = "Home.html";
+								}
+							});
+							/**存储用户信息**/
+							sessionStorage.setItem('user', JSON.stringify(res.data.data));
+						}
+					}).catch((error) => {
+						// window.location.href="/module/login.html"
+					});
+				}
+			}
+		},
+		created(){
+		}
+		
+	}
+</script>

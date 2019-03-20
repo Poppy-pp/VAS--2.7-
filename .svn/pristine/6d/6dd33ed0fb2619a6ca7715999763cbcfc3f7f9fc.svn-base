@@ -1,0 +1,1918 @@
+<!--* 
+* @description: 维修订单（派单） 维修单详情
+* @author: 王鹏 
+* @update: 王鹏 (2017-05-27 10:55) 
+*-->
+<template>
+	<el-row>
+		<el-col :span="24">
+			<el-collapse v-model="detailActiveNames" class="bdcoll rpShowimgDialog">
+				<el-collapse-item title="报单信息" class="lefw10 wzpdt10" name="1">
+					<el-row class="mt2 pt2">
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>维修单号:</dt>
+								<dd v-if="ruleFormStatic.orderno">{{ ruleFormStatic.orderno }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>创建人单位:</dt>
+								<dd v-if="ruleFormStatic.corporateInfo">{{ ruleFormStatic.corporateInfo.corpname }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>当前处理人:</dt>
+								<dd v-if="$store.state.formObj.assignee">{{ $store.state.formObj.assignee }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>任务候选人:</dt>
+								<dd v-if="$store.state.formObj.candidateUsers">{{ $store.state.formObj.candidateUsers }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>报单时间:</dt>
+								<dd v-if="ruleFormStatic.createdate">{{ util.formatDate.format(new Date(ruleFormStatic.createdate), 'yyyy-MM-dd hh:mm:ss') }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="12" v-if="ruleFormStatic.flowData">
+							<dl class="dllist">
+								<dt>报单备注:</dt>
+								<dd >{{ ruleFormStatic.flowData.start_remark }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="12" v-if="ruleFormStatic.flowData">
+							<dl class="dllist">
+								<dt>派单备注:</dt>
+								<dd >{{ ruleFormStatic.flowData.send_remark }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="12" v-if="ruleFormStatic.flowData">
+							<dl class="dllist">
+								<dt>施工备注:</dt>
+								<dd >{{ ruleFormStatic.flowData.work_remark }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="12" v-if="ruleFormStatic.flowData">
+							<dl class="dllist">
+								<dt>审核备注:</dt>
+								<dd >{{ ruleFormStatic.flowData.service_verify_remark }}</dd>
+							</dl>
+						</el-col>
+					</el-row>
+				</el-collapse-item>
+
+				<el-collapse-item title="车主信息" class="lefw10 wzpdt10" name="2">
+					<el-row class="mt2 pt2">
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>姓名:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo.ownerInfo">{{ ruleFormStatic.vehicleInfo.ownerInfo.name }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>身份证号码:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo.ownerInfo">{{ ruleFormStatic.vehicleInfo.ownerInfo.idcard }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>联系电话:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo.ownerInfo">{{ ruleFormStatic.vehicleInfo.ownerInfo.mobile }}</dd>
+							</dl>
+						</el-col>
+					</el-row>
+				</el-collapse-item>
+
+				<el-collapse-item title="车辆信息" class="lefw10 wzpdt10" name="3">
+					<el-row class="mt2 pt2">
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车辆型号:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.model }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车牌号:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.licenseplatenum }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车牌颜色:</dt>
+								<dd>{{ ruleFormStatic.vehicleInfo.licenseplatecolor ? ruleFormStatic.vehicleInfo.licenseplatecolor : '暂无' }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车辆类型:</dt>
+								<dd>{{ ruleFormStatic.vehicleInfo.vehiclePlateColor ? ruleFormStatic.vehicleInfo.vehiclePlateColor.typedesc : '暂无' }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车架号:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.vin }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车辆颜色:</dt>
+								<template v-if="ruleFormStatic.vehicleInfo">
+									<template v-if="ruleFormStatic.vehicleInfo.color">
+										<dd v-if="ruleFormStatic.vehicleInfo.color.indexOf('#') < 0">{{ ruleFormStatic.vehicleInfo.color }}</dd>
+										<dd v-else>
+											<span class="color_rgba" :style="{background:ruleFormStatic.vehicleInfo.color}"></span>
+										</dd>
+									</template>
+								</template>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>车价:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.price }}元</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>受理银行:</dt>
+								<dd v-if="ruleFormStatic.vehicleInfo">
+									<template v-if="ruleFormStatic.vehicleInfo.receivingbank">
+										{{ ruleFormStatic.vehicleInfo.receivingbank.corpname }}
+									</template>
+								</dd>
+							</dl>
+						</el-col>
+
+						<!-- <el-col :span="24">
+							<span style="font-size:14px;vertical-align: middle;color:#009688;" class="ml5">维修前车辆照片</span>
+							<dl class="dllist lh55_mb10">
+								<dd v-if="ruleFormStatic.afterSaleDetails.length > 0">
+									<div class="imgMd mr4 mt5" v-for="(item,index) in ruleFormStatic.afterSaleDetails[0].installDetail.pictures">
+										<img :title="item.picdesc" class="image" :src="$store.state.IMG_URL+item.piclink">
+										<span>{{ item.picdesc }}</span>
+									</div>
+								</dd>
+							</dl>
+						</el-col> -->
+						<el-col :span="24" v-if="stepNum == 4 || stepNum == 5">
+							<el-form label-position="top" :model="ruleForm" class="cur-form-inn" inline>
+								<el-form-item label="上传车辆照片">
+									<el-row :gutter="20">
+										<el-col class="photosh sgphtosh">
+											<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+												<el-upload name="mediaFile" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="vinHandleAvatarSuccess">
+													<img v-if="ruleForm.pictures[0].piclink" :src="$store.state.IMG_URL+ruleForm.pictures[0].piclink" class="avatar">
+													<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+												</el-upload>
+												<div class="btsty">
+													车架号
+												</div>
+											</el-card>
+										</el-col>
+										<el-col class="photosh sgphtosh">
+											<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+												<el-upload name="mediaFile" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="carNumHandleAvatarSuccess">
+													<img v-if="ruleForm.pictures[1].piclink" :src="$store.state.IMG_URL+ruleForm.pictures[1].piclink" class="avatar">
+													<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+												</el-upload>
+												<div class="btsty">
+													车牌号
+												</div>
+											</el-card>
+										</el-col>
+										<el-col class="photosh sgphtosh">
+											<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+												<el-upload name="mediaFile" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="carMpHandleAvatarSuccess">
+													<img v-if="ruleForm.pictures[2].piclink" :src="$store.state.IMG_URL+ruleForm.pictures[2].piclink" class="avatar">
+													<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+												</el-upload>
+												<div class="btsty">
+													铭牌号
+												</div>
+											</el-card>
+										</el-col>
+
+										<el-col class="photosh sgphtosh" v-for="(item,index) in ruleForm.pictures" v-if="index > 2">
+											<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+												<el-upload name="mediaFile" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" @click.native="carHandleMouseover(index)" :on-success="carHandleSuccess">
+													<img v-if="ruleForm.pictures[index].piclink" :src="$store.state.IMG_URL+ruleForm.pictures[index].piclink" class="avatar">
+													<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+												</el-upload>
+												<div class="btsty">
+													<el-select class="fl" :style="{width:(index == ruleForm.pictures.length-1)?'100%':''}" @visible-change="changeCarPicLac" filterable v-loading="carPicLoading" v-model="ruleForm.pictures[index].picdesc" clearable placeholder="请选择车辆照片位置">
+														<el-option v-for="item in carPicList" :key="item.dictdatavalue" :label="item.dictdatavalue" :value="item.dictdatavalue">
+														</el-option>
+													</el-select>
+													<div class="bottom clearfix text_al fr" v-if="index != ruleForm.pictures.length-1">
+														<i class="iconfont icon-p-delet operate operate-p-delet" @click="removeBusiPicture(index)" title="删除照片"></i>
+													</div>
+												</div>
+											</el-card>
+										</el-col>
+									</el-row>
+								</el-form-item>
+							</el-form>
+						</el-col>
+					</el-row>
+				</el-collapse-item>
+
+				<el-collapse-item title="维修前设备信息" name="10086" class="enlargeArea" v-if="ruleFormStatic.afterSaleDetails && ruleFormStatic.afterSaleDetails.length>0">
+					<template slot="title">
+						<div class="fl sebei" style="margin-right:10px;">维修前设备信息</div>
+						<el-button @click.stop="realTimeRefreshPro('vueAmap3')" :loading="realTimeRefreshLoading" size="mini"><i class="iconfont icon-shuaxin" style="padding-right: 6px;"></i>刷新</el-button>
+					</template>
+					<el-row class="mt5">
+						<el-col :span="24">
+							<gdmap3 ref="vueAmap3"></gdmap3>
+						</el-col>
+					</el-row>
+				</el-collapse-item>
+				<template v-for="(item,index) in ruleFormStatic.afterSaleDetails">
+					<el-collapse-item title="维修前设备信息" :name="(++index)+''" class="wzpdt10">
+						<template slot="title">
+							<div class="fl sebei">
+								<span class="tagNum">{{ index }}</span> {{ item.packinfo.E_PRODTYPE+'设备'+item.packinfo.E_PRODMODEL }}
+							</div>
+						</template>
+						<el-row class="mt5">
+							<el-col :span="24" v-if="stepNum == 4">
+								<el-checkbox v-model="noDeviceChecked['check'+index]" @change="noDeviceCheckedChange">无维修设备</el-checkbox>
+								<el-button type="primary" :disabled="noDeviceChecked['check'+index]" @click="replaceCard(item,index,item)" class="ml10">更换卡</el-button>
+								<el-button type="success" :disabled="noDeviceChecked['check'+index]" @click="replaceDevice(item,index,item)">更换设备</el-button>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装位置:</dt>
+									<dd>{{ item.installpositionname }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装时状态：</dt>
+									<dd v-if="item.onlinestatus">{{ item.onlinestatus == 0 ? "未上线" : "在线" }}</dd>
+									<dd v-else>未上线</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>设备ID:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.E_PRODUNUM }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>设备类型:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.E_PRODTYPE }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>设备型号:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.E_PRODMODEL }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>SIM卡号:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.C_PRODUNUM }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>iccid:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.SIMCARDID }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>卡类型:</dt>
+									<dd v-if="item.packinfo">{{ item.packinfo.C_PRODMODEL }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>设备实时状态：</dt>
+									<dd v-if="item.curonlinestatus">{{ item.curonlinestatus }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>最后一次通讯时间：</dt>
+									<dd v-if="item.recvtime">{{ item.recvtime }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>实时位置信息：</dt>
+									<dd v-if="item.curaddress">{{ item.curaddress }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>SIM卡状态：</dt>
+									<dd v-if="item.cardstatus">{{ item.cardstatus }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>维修原因：</dt>
+									<dd v-if="item.faultcode">{{ item.faultcode }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="24" v-if="item.remark">
+								<dl class="dllist">
+									<dt>设备备注:</dt>
+									<dd>{{ item.remark }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="24" v-if="item.picdesc">
+								<dl class="dllist lh55_mb10">
+									<dd>
+										<div class="imgMd mr4 mt5" v-for="(item,index) in item.pictures">
+											<img :title="item.picdesc" class="image" :src="$store.state.IMG_URL+item.piclink">
+											<span>{{ item.picdesc }}</span>
+										</div>
+									</dd>
+								</dl>
+							</el-col>
+						</el-row>
+					</el-collapse-item>
+				</template>
+
+				
+				<el-collapse-item title="更换设备或卡信息" class="lefw10 wzpdt10" name="9" v-if='stepNum > 3'>
+					<el-form label-position="top" :model="ruleForm" ref="ruleForm" :rules="rules" class="cur-form-inn" label-width="110px" inline>
+						<el-row :gutter="10">
+							<template v-for="(item,index) in deviceCurData">
+								<div class="fl sebei ml10">
+									<span class="tagNum">{{ index + 1 }}</span>
+									<span style="font-size:14px;vertical-align: middle;color:#009688;" class="ml5">
+										更换设备
+									<!-- <template v-if="item.isReplaceCard">
+										更换卡
+									</template>
+									<template v-else>
+										更换设备
+									</template> -->
+									</span>
+								</div>
+								<el-col :span="24" class="mt10" style="border-bottom:1px solid #e8e8e8;">
+									<el-col :span="10">
+										<dl class="dllist">
+											<dt>设备类型:</dt>
+											<dd>{{ item.E_PRODTYPE || item.PRODSPEC }}</dd>
+										</dl>
+										<dl class="dllist">
+											<dt>卡类型:</dt>
+											<dd>{{ item.C_PRODMODEL }}</dd>
+										</dl>
+									</el-col>
+									<el-col :span="9">
+										<dl class="dllist">
+											<dt>设备型号:</dt>
+											<dd>{{ item.E_PRODMODEL }}</dd>
+										</dl>
+										<dl class="dllist">
+											<dt>SIM卡号:</dt>
+											<dd>{{ item.C_PRODUNUM }}</dd>
+										</dl>
+									</el-col>
+									<el-col :span="5">
+										<dl class="dllist">
+											<dt>设备编号:</dt>
+											<dd>{{ item.E_PRODUNUM }}</dd>
+										</dl>
+									</el-col>
+									<template>
+										<el-col :span="10" v-if="ruleForm.installDetails.length > 0">
+											<el-form-item label="安装位置(必选)" class="mt10">
+												<el-select filterable :loading="codeloading" @visible-change="changeInstallDecode" v-model="ruleForm.installDetails[index].installpositioncode" placeholder="请选择安装位置">
+													<el-option v-for="item in InstallPositionArray" :key="item.dictdatavalue" :label="item.dictdatavalue" :value="item.dictdataname">
+													</el-option>
+												</el-select>
+											</el-form-item>
+										</el-col>
+
+										<el-col :span="13" v-if="ruleForm.installDetails.length > 0">
+											<el-form-item class="mbs5 mt8">
+												<div slot="label">
+													设备是否在线
+													<el-button @click="cldeviceIsOnstate(item.E_PRODUNUM,index)" :loading="realTimeRefreshLoading" size="mini"><i class="pr5 iconfont icon-shuaxin"></i>刷新</el-button>
+												</div>
+												<el-radio-group v-model="ruleForm.installDetails[index].onlinestatus" size="medium">
+													<el-radio-button :disabled="ruleForm.installDetails[index].onlinestatus == 0" label='1'>已上线</el-radio-button>
+													<el-radio-button :disabled="ruleForm.installDetails[index].onlinestatus == 1" label='0'>不在线</el-radio-button>
+												</el-radio-group>
+											</el-form-item>
+										</el-col>
+
+										<el-col :span="24" class="mb10" v-if="ruleForm.installDetails.length > 0">
+											<el-form-item label="当前设备照片" prop="installactualdate"  v-if="ruleForm.installDetails[index].pictures != undefined && ruleForm.installDetails[index].pictures.length > 0 ">
+												<el-row :gutter="20">
+													<el-col class="photosh sgphtosh">
+														<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+															<el-upload name="mediaFile" :ref="'devUploada'+index" :data="{ind:index}" class="avatar-uploader" action="/vasms-web/atta/upload" @click.native="deviceHandleMouseover(0,'devUploada'+index)" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="deviveZxHandleAvatarSuccess">
+																<img v-if="ruleForm.installDetails[index].pictures[0].piclink" :src="$store.state.IMG_URL+ruleForm.installDetails[index].pictures[0].piclink" class="avatar">
+																<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+															</el-upload>
+															<div class="btsty">
+																设备走线照片
+															</div>
+														</el-card>
+													</el-col>
+													<el-col class="photosh sgphtosh">
+														<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+															<el-upload name="mediaFile" :ref="'devUploadb'+(index+1)" :data="{ind:index}" class="avatar-uploader" @click.native="deviceHandleMouseover(1,'devUploadb'+(index+1))" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="deviveSbhHandleAvatarSuccess">
+																<img v-if="ruleForm.installDetails[index].pictures[1].piclink" :src="$store.state.IMG_URL+ruleForm.installDetails[index].pictures[1].piclink" class="avatar">
+																<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+															</el-upload>
+															<div class="btsty">
+																设备号照片
+															</div>
+														</el-card>
+													</el-col>
+													<el-col class="photosh sgphtosh">
+														<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+															<el-upload name="mediaFile" :ref="'devUploadc'+(index+2)" :data="{ind:index}" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" @click.native="deviceHandleMouseover(2,'devUploadc'+(index+2))" :accept="accept" :before-upload="util.beforeAvatarUpload" :on-success="deviveSbHandleAvatarSuccess">
+																<img v-if="ruleForm.installDetails[index].pictures[2].piclink" :src="$store.state.IMG_URL+ruleForm.installDetails[index].pictures[2].piclink" class="avatar">
+																<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+															</el-upload>
+															<div class="btsty">
+																设备照片
+															</div>
+														</el-card>
+													</el-col>
+
+													<el-col class="photosh sgphtosh" v-for="(item,ind) in ruleForm.installDetails[index].pictures" v-if="ind > 2">
+														<el-card :body-style="{ padding: '0px !important' }" class="devptosty">
+															<el-upload name="mediaFile" :ref="'devUploadd'+(index*6+ind+3)" :data="{ind:index}" class="avatar-uploader" action="/vasms-web/atta/upload" :show-file-list="false" :accept="accept" :before-upload="util.beforeAvatarUpload" @click.native="deviceHandleMouseover(ind,'devUploadd'+(index*6+ind+3))" :on-success="deviceHandleSuccess">
+																<img v-if="ruleForm.installDetails[index].pictures[ind].piclink" :src="$store.state.IMG_URL+ruleForm.installDetails[index].pictures[ind].piclink" class="avatar">
+																<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+															</el-upload>
+															<div class="btsty">
+																<el-select class="fl" :style="{width:(ind == ruleForm.installDetails[index].pictures.length-1)?'100%':''}" @visible-change="changeCarPicLac" filterable v-loading="carPicLoading" v-model="ruleForm.installDetails[index].pictures[ind].picdesc" clearable placeholder="请选择设备照片位置">
+																	<el-option v-for="item in carPicList" :key="item.dictdatavalue" :label="item.dictdatavalue" :value="item.dictdatavalue">
+																	</el-option>
+																</el-select>
+																<div class="bottom clearfix text_al fr" v-if="(ind != ruleForm.installDetails[index].pictures.length-1)">
+																	<i class="iconfont icon-p-delet operate operate-p-delet" @click="deviceRemoveBusiPicture(index,ind,ruleForm.installDetails[index].pictures[ind].piclink)" title="删除照片"></i>
+																</div>
+															</div>
+														</el-card>
+													</el-col>
+												</el-row>
+											</el-form-item>
+										</el-col>
+
+										<el-col :span="24" v-if="ruleForm.installDetails.length > 0">
+											<el-form-item label="当前设备描述" prop="remark">
+												<el-input type="textarea" autosize placeholder="请输入当前设备描述" v-model="ruleForm.installDetails[index].remark"></el-input>
+											</el-form-item>
+										</el-col>
+									</template>
+									<el-col :span="24" class="mb10">
+										<!-- <el-button type="danger" class="ml5 fr mt10" icon="el-icon-delete" @click="delDevice(item,index)">删除</el-button> -->
+										<!-- <el-button type="danger" class="ml5 fr" v-if="isEditPro" @click="replaceDevice(item,index)">
+											<i class='iconfont icon-tihuan'></i> 替换当前设备
+										</el-button> -->
+									</el-col>
+								</el-col>
+							</template>
+						</el-row>
+					</el-form>
+				</el-collapse-item>
+
+			<el-collapse-item title="预约信息" class="lefw10 wzpdt10" name="8">
+					<el-form label-position="top" :model="ruleForm" class="cur-form-inn" inline v-if="stepNum == 2">
+						<el-row :gutter="20">
+							<el-col :span="8">
+								<el-form-item label="维修联系人" prop="contactperson" class="wiredNum">
+									<el-input type="text" placeholder="请输入维修联系人" v-model="ruleForm.contactperson"></el-input>
+								</el-form-item>
+							</el-col>
+
+							<el-col :span="8">
+								<el-form-item label="联系人电话" prop="contactmobile" class="wiredNum">
+									<el-input type="text" placeholder="请输入联系人电话" v-model="ruleForm.contactmobile"></el-input>
+								</el-form-item>
+							</el-col>
+
+							<el-col :span="8">
+								<el-form-item label="预约时间" prop="aftersaledate">
+									<el-date-picker type="datetime" :picker-options="pickerOptions" placeholder="选择日期" v-model="ruleForm.aftersaledate" style="width: 100%;"></el-date-picker>
+								</el-form-item>
+							</el-col>
+
+							<el-col :span="24">
+								<el-form-item label="预约地址" class="installaddressStyle" prop="aftersaleaddress">
+									<el-input placeholder="请输入详细地址" v-model="ruleForm.aftersaleaddress" @change="refmap">
+										<el-cascader placeholder="请选择省/市/区" slot="prepend" class="cascLable" v-model="ruleForm.aftersaleaddressCity" :options="prOptions" @change="addressChanges" filterable change-on-select></el-cascader>
+									</el-input>
+								</el-form-item>
+								<gdmap v-if="ruleForm.aftersaleaddress" @draggerMapMarker="draggerMapMarker" :address="ruleForm.aftersaleaddress" ref="vueAmap"></gdmap>
+							</el-col>
+						</el-row>
+					</el-form>
+					
+					<el-row class="mt2 pt2" v-else>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>维修联系人:</dt>
+								<dd v-if="ruleFormStatic.contactperson">{{ ruleFormStatic.contactperson }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>联系电话:</dt>
+								<dd v-if="ruleFormStatic.contactmobile">{{ ruleFormStatic.contactmobile }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>预约时间:</dt>
+								<dd v-if="ruleFormStatic.aftersaledate">{{ ruleFormStatic.aftersaledate }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="16">
+							<dl class="dllist">
+								<dt>预约地址:</dt>
+								<dd v-if="ruleFormStatic.aftersaleaddress">{{ ruleFormStatic.aftersaleaddress }}</dd>
+							</dl>
+						</el-col>
+					</el-row>
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+
+
+
+		<!-- 报单 -->
+		<el-col v-if="stepNum == 1" :span="24" class="cbstyle">
+			<el-button @click="closeDialog" style="margin-left:5px;float:right;">取消</el-button>
+			<el-button @click="comfirDelOrder" type="danger" style="margin-left:5px;float:right;">废除订单</el-button>
+			<el-button type="primary" @click="$router.push('/dismantle')" :loading="addLoading" style="margin-left:5px;float:right;">重新报单</el-button>
+		</el-col>
+
+		<!-- 派单 -->
+		<el-col v-if="stepNum == 2" :span="24" class="cbstyle">
+			<el-collapse v-model="activeNames" class="bdcoll">
+				<el-collapse-item title="派单操作" name="1" class="lefw10">
+					<el-form label-position="top" :model="ruleForm" ref="ruleForm" :rules="rules" class="cur-form-inn" label-width="110px" inline>
+						<el-row :gutter="20">
+							<el-col :span="24" style="padding:0;">
+								<el-col :span="8">
+									<el-form-item label="安装小组" prop="send_work_group">
+										<el-select @change="changeInstallGrounp" value-key="groupname" @visible-change="visInitGroup" :loading="groupLoading" filterable v-model="ruleForm.send_work_group" placeholder="请选择">
+											<el-option v-for="item in workGroup" :key="item.groupname" :label="item.groupname" :value="item">
+											</el-option>
+										</el-select>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8">
+									<el-form-item label="指定安装人员" prop="send_work_user">
+										<el-select v-model="ruleForm.send_work_user" value-key="employeename" filterable :loading="userLoading" placeholder="请选择">
+											<el-option v-for="item in workUser" :label="item.employeename" :key="item.employeename" :value="item">
+											</el-option>
+										</el-select>
+									</el-form-item>
+								</el-col>
+							</el-col>
+							<el-col :span="24" class="mt5">
+								<el-form-item label="备注" prop="remark">
+									<el-input type="textarea" autosize placeholder="请输入备注" v-model="ruleForm.remark"></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="24">
+								<personnelPositioning ref="mapPositon" :groupid="groupid"></personnelPositioning>
+							</el-col>
+						</el-row>
+						<el-col class="footer_but_bd" :span="24">
+							<el-button type="primary" @click="submitForm('ruleForm')" :loading="addLoading" style="margin-left:5px;float:right;">提交</el-button>
+							<el-button @click="closeDialog" style="margin-left:5px;float:right;">取消</el-button>
+							<el-button @click="addRefuseHandling(0)" :loading="addLoading" class="fr" type="danger">退回</el-button>
+						</el-col>
+					</el-form>
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+		<!-- 施工接单 -->
+		<el-col :span="24" v-if="stepNum == 3" class="cbstyle">
+			<el-collapse v-model="activeNames" class="bdcoll">
+				<el-collapse-item title="施工接单审核" name="1" class="lefw10">
+					<el-col :span="12" class="mt10">
+						<el-radio-group v-model="tmpresult" @change="resultChange" size="small">
+							<el-radio label="0" border>通过</el-radio>
+							<el-radio label="1" border>未通过</el-radio>
+						</el-radio-group>
+					</el-col>
+
+					<el-col :span="12" class="mt10">
+						<el-button type="primary" @click="passConstructionOrder('ruleForm')" class="fr" :loading="addLoading">提交</el-button>
+						<el-button @click="closeDialog" class="fr mr5">取消</el-button>
+					</el-col>
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+
+		<!-- 施工 -->
+		<el-col :span="24" v-if="stepNum == 4" class="cbstyle">
+			<el-collapse v-model="activeNames" class="bdcoll">
+				<el-collapse-item title="施工" name="1" class="lefw10">
+					<el-col :span="24" class="mt10">
+						<el-input type="textarea" autosize placeholder="请输入备注" v-model="rejectRemarks"></el-input>
+					</el-col>
+					<el-col :span="24" class="mt10">
+						<el-button type="primary" @click="wxaddRefuseHandling" class="fr" :loading="addLoading">提交</el-button>
+						<el-button @click="closeDialog" class="fr mr5" style="margin-left:5px;">取消</el-button>
+						<el-button @click="addRefuseHandling(0)" :loading="addLoading" class="fr" type="danger">退回</el-button>
+					</el-col>
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+
+		<!-- 审核 -->
+		<el-col :span="24" v-if="stepNum == 5" class="cbstyle">
+			<el-collapse v-model="activeNames" class="bdcoll">
+				<el-collapse-item title="审核" name="1" class="lefw10">
+					<el-col :span="24" class="mt10">
+						<evaluate ref="refEvaluate"></evaluate>
+					</el-col>
+					<el-col :span="24" class="mt10">
+						<el-input type="textarea" autosize placeholder="请输入备注" v-model="rejectRemarks"></el-input>
+					</el-col>
+					<el-col :span="24" class="mt10">
+						<el-button type="primary" @click="wxaddRefuseHandlingSh" class="fr" :loading="addLoading">提交</el-button>
+						<el-button @click="closeDialog" class="fr mr5" style="margin-left:5px;">取消</el-button>
+						<el-button @click="addRefuseHandling(0)" :loading="addLoading" type="danger" class="fr">退回</el-button>
+					</el-col>
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+
+		<!-- 流转信息 -->
+		<el-col :span="24" class="cbstyle mt10">
+			<el-collapse v-model="activeName" class="bdcoll">
+				<el-collapse-item title="流转信息" class="lefw10" name="1">
+					<el-row class="mt2 pt2">
+						<el-col :span="24">
+							<el-table :data="cirInfoData" border style="width: 100%">
+								<el-table-column prop="NAME_" align="center" label="流程节点" width="80">
+								</el-table-column>
+								<el-table-column prop="EMPLOYEENAME" align="center" label="操作人" width="80">
+								</el-table-column>
+								<el-table-column prop="START_TIME_" align="center" label="接收时间" :formatter="endDateFormat">
+								</el-table-column>
+								<el-table-column prop="END_TIME_" align="center" label="提交时间" :formatter="startDateFormat">
+								</el-table-column>
+								<el-table-column prop="DURATION_" align="center" label="操作耗时">
+								</el-table-column>
+								<el-table-column prop="" align="center" label="操作状态">
+								</el-table-column>
+								<el-table-column prop="remark" align="center" label="备注信息">
+								</el-table-column>
+							</el-table>
+						</el-col>
+					</el-row> 
+				</el-collapse-item>
+			</el-collapse>
+		</el-col>
+
+		<!-- 设备安装 弹窗  start-->
+		<el-dialog class="formdetail" :modal-append-to-body="false" title="施工" :visible.sync="selectFormdetail">
+			<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+				<el-form :inline="true" :model="profilters">
+					<el-form-item>
+						<el-input v-model="profilters.search_key" @keyup.native.enter="searchDevceinfo" placeholder="例如:设备编号,卡编号,卡号"></el-input>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" @click="searchDevceinfo" icon="el-icon-search">查询</el-button>
+					</el-form-item>
+				</el-form>
+			</el-col>
+			<el-table :data="deviceData" max-height="300" :row-class-name="tableRowClassName" v-loading="listLoading" @row-dblclick="deviceClickHandle">
+				<el-table-column align="center" prop="PRODSPEC" label="设备种类"></el-table-column>
+				<el-table-column align="center" prop="PACKSELFID" label="自编号"></el-table-column>
+				<el-table-column align="center" prop="E_PRODMODEL" label="设备类型"></el-table-column>
+				<el-table-column align="center" prop="E_PRODUNUM" label="设备ID"></el-table-column>
+				<el-table-column align="center" prop="E_STATUS" label="设备状态"></el-table-column>
+				<el-table-column align="center" prop="C_PRODMODEL" label="卡类型"></el-table-column>
+				<el-table-column align="center" prop="C_PRODUNUM" label="SIM卡号"></el-table-column>
+				<el-table-column align="center" prop="E_INSURANCEFLAG" label="保险设备">
+					<template scope="props">
+						{{ props.row.E_INSURANCEFLAG == "Y"?"是":"否" }}
+					</template>
+				</el-table-column>
+				<el-table-column align="center" prop="E_NORMALFLAG" label="常规设备">
+					<template scope="props">
+						{{ props.row.E_NORMALFLAG == "Y"?"是":"否" }}
+					</template>
+				</el-table-column>
+			</el-table>
+			<!--工具条-->
+			<el-col :span="24" class="toolbar">
+				<el-pagination background @size-change="dhandleSizeChange" @current-change="dhandleCurrentChange" :page-sizes="[15, 50,80,99]" :page-size="dpageSize" layout="total, sizes, prev, pager, next" :total="dtotal" style="float:right;margin-top:10px;">
+				</el-pagination>
+			</el-col>
+		</el-dialog>
+	</el-row>
+</template>
+<style scoped>
+	@import '../css/customerDeclaration.css';
+</style>
+<script>
+	import async from 'async';
+	import util from '../../../common/js/util';
+	import gdmap3 from 'components/map/gdmap3';
+	import gdmap from 'components/map/gdmap';
+	import evaluate from 'components/comment/evaluate';
+	import personnelPositioning from 'components/map/personnelPositioning';
+	import { addApprovaperSendVindicate, getPdInstallGroupList, getPdInstallUserList, getvariablesSeaviceTaskInfoList, cldeviceIsOnstate, deleteProcess, addApprovaperVindicateCl, getAlldetail, getInstallPositionCode, getCarPicLocation } from '../../../api/api';
+	export default {
+		components: {
+			gdmap3,
+			gdmap,
+			evaluate,
+			personnelPositioning
+		},
+		data() {
+			//自定义验证安装地址表单
+			let checkInstall = (rule, value, callback) => {
+				if(this.ruleForm[rule.field].length <= 0) {
+					return callback(new Error('必选项'));
+				} else {
+					callback();
+				}
+			};
+			return {
+				groupid:'',
+				accept: '.jpg,.png',
+				profilters: {
+					search_key: ''
+				},
+				selectFormdetail: false,
+				listLoading: false,
+				noDeviceChecked: {
+					check1:true,
+					check2:true,
+					check3:true,
+					check4:true,
+					check5:true,
+					check6:true,
+					check7:true,
+					check8:true,
+					check9:true,
+					check10:true,
+					check11:true
+				},
+				prOptions: util.initProvince(),
+				indDe: 0,
+				util: util,
+				tmpresult: '0',
+				cirInfoData: [],
+				deviceData: [],
+				//启动报单提交表单信息
+				ruleForm: {
+					aftersaledate: util.formatDate.format(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+					aftersaleaddress: '',
+					contactperson: '',
+					contactmobile: '',
+					aftersaleaddressCity: [],
+					send_work_group: '',
+					send_work_user: '',
+					installDetails: [],
+					result: true,
+					pictures: [{
+							picdesc: "车架号",
+							piclink: ""
+						},
+						{
+							picdesc: "车牌号",
+							piclink: ""
+						},
+						{
+							picdesc: "铭牌号",
+							piclink: ""
+						},
+						{
+							picdesc: "其它部分照片",
+							piclink: ""
+						}
+					],
+					remark: ''
+				},
+				workGroup: [],
+				workUser: [],
+				curTaskId: '',
+				rules: { //启动报单表单验证信息
+					send_work_group: [{
+						required: true,
+						validator: checkInstall,
+						trigger: 'blur'
+					}], //安装小组验证
+					send_work_user: [{
+						required: true,
+						validator: checkInstall,
+						trigger: 'blur'
+					}] //安装人员验证
+				},
+				//维修弹窗详情显示
+				ruleFormStatic: {
+					vehicleInfo: {
+						model: '',
+						color: '',
+						licenseplatenum: '',
+						vin: '',
+						price: '',
+						yearsofservice: '',
+						receivingbank: {},
+						ownerInfo: {
+							name: '',
+							idcard: '',
+							mobile: ''
+						}
+					},
+					assigntoGroup: {
+						groupname: ''
+					},
+					assigntoEmployeeInfo: {
+						employeename: ''
+					},
+					afterSaleDetails: [],
+					corporateInfo: {},
+					declarEmployee: {},
+					flowData: {},
+					installGroupInfo: {}
+				},
+				codeloading: false,
+				pickerOptions: {
+					disabledDate(time) {
+						return time.getTime() < Date.now() - 8.64e7;
+					}
+				},
+				carPicValue: '',
+				detailActiveNames: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '10086'],
+				activeNames: ['1'],
+				activeName: ['1'],
+				stepNum: 1,
+				curIndex: 0,
+				deviceCurData: [],
+				addLoading: false,
+				isFlag: true,
+				realTimeRefreshLoading: false,
+				groupLoading: false,
+				userLoading: false,
+				rejectRemarks: '',
+				dcurrentPage: 0,
+				dtotal: 0,
+				uplodVueComponent: '',
+				dpageSize: 15,
+				installUserId: '',
+				oldDevice: {},
+				InstallPositionArray: [],
+				runDeviceList: [],
+				prodcategory: '',
+				carPicList: [],
+				carCurIndex: 0,
+				carPicLoading: false,
+				newID:[],//更换ID
+			};
+		},
+		methods: {
+			//设备删除
+			delDevice(item, index) {
+				this.deviceCurData.splice(index, 1);
+				this.ruleForm.installDetails.splice(index, 1);
+			},
+			//设备删除设备照片
+			deviceRemoveBusiPicture(pind, cind, piclink) {
+				this.$confirm('确认删除当前设备照片吗?', '提示', {
+					type: 'error'
+				}).then(() => {
+					this.ruleForm.installDetails[pind].pictures.splice(cind, 1);
+				});
+			},
+			//查询设备信息
+			searchDevceinfo() {
+				if(!this.installUserId) {
+					this.$message({
+						showClose: true,
+						message: '未找到安装人员信息！',
+						type: 'error'
+					});
+					return;
+				}
+				let para = {
+					empid: this.installUserId,
+					prodcategory: this.prodcategory,
+					status: "INSTO",
+					search_key: this.profilters.search_key
+				};
+				this.listLoading = true;
+				getAlldetail(para).then((res) => {
+					this.listLoading = false;
+					if(res.data.result.code == 0) {
+						this.deviceData = res.data.data.records;
+						this.dtotal = res.data.data.totalResult;
+					} else {
+						this.deviceData = [];
+						this.dtotal = 0;
+					}
+				}).catch((error) => {
+					this.listLoading = false;
+				});
+			},
+			//判断当前数组中是否存在某个属性
+			findElem(arrayToSearch, attr, val) {
+				for(var i = 0; i < arrayToSearch.length; i++) {
+					if(arrayToSearch[i][attr] == val) {
+						return false;
+					}
+				}
+				return true;
+			},
+			// 是否已经选择该设备
+			tableRowClassName(row, index) {
+				let vflag;
+				if(row.row.ID == undefined) {
+					vflag = this.findElem(this.deviceCurData, "SIMCARDID", row.row.SIMCARDID);
+				} else {
+					vflag = this.findElem(this.deviceCurData, "ID", row.row.ID);
+				}
+
+				if(!vflag) {
+					return 'warning-row';
+				}
+				return '';
+			},
+			//点击设备添加设备编辑
+			deviceClickHandle(row, event, column) {
+				row.isReplaceCard = this.oldDevice.isReplaceCard;
+				this.deviceCurData.splice(this.oldDevice.index, 1, row);
+				if(row.isReplaceCard) {
+					//添加卡信息
+					this.ruleForm.installDetails.splice(this.oldDevice.index, 1, {
+						isReplaceCard: this.oldDevice.isReplaceCard,
+						simId: row.SIMCARDID,
+						oldDeviceId: this.newID.ID,
+						remark: null
+					});
+				} else {
+					//添加设备信息
+					this.ruleForm.installDetails.splice(this.oldDevice.index, 1, {
+						installpositioncode: null,
+						packid: row.ID,
+						E_PRODMODEL: row.E_PRODMODEL,
+						E_PRODUNUM: row.E_PRODUNUM,
+						E_PRODTYPE :row.PRODSPEC,
+						isReplaceCard: this.oldDevice.isReplaceCard,
+						oldDeviceId: this.newID.ID,
+						pictures: [{
+								picdesc: "设备走线照片",
+								piclink: ""
+							},
+							{
+								picdesc: "设备照片",
+								piclink: ""
+							},
+							{
+								picdesc: "设备号照片",
+								piclink: ""
+							},
+							{
+								picdesc: "其它部分照片",
+								piclink: ""
+							}
+						],
+						onlinestatus: 0,
+						remark: null
+					});
+					this.cldeviceIsOnstate(row.E_PRODUNUM, this.deviceCurData.length - 1);
+				}
+				this.selectFormdetail = false;
+			},
+			//获取车辆上传照片位置
+			changeCarPicLac(r) {
+				if(!r || this.carPicList.length > 0) return;
+				this.carPicLoading = true;
+				let para = {
+					showCount: 1000
+				}
+				getCarPicLocation(para).then((res) => {
+					this.carPicLoading = false;
+					if(res.data.result.code == 0) {
+						this.carPicList = res.data.data.records;
+					}
+				});
+			},
+			//删除添加的照片
+			deviceHandleRemove(file, fileList) {
+				this.installPic(-1, file, fileList, 3);
+			},
+			//上传照片判断是否选择了照片位置
+			carbeforeAvatarUpload(file) {
+				if(this.carPicValue == '') {
+					this.$message({
+						showClose: true,
+						message: '请选择上传车辆照片位置',
+						type: 'error'
+					});
+					return false;
+				}
+			},
+			//记录车上传控件
+			carHandleMouseover(index) {
+				this.carCurIndex = index;
+			},
+			//车上传照片删除
+			carHandleRemove(file, fileList) {
+				this.installPic(-1, file, fileList, 1);
+			},
+			//车上传照片成功
+			carHandleSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 1);
+			},
+			//车架号
+			vinHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 4);
+			},
+			//车牌号
+			carNumHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 5);
+			},
+			//铭牌
+			carMpHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 6);
+			},
+			deviveZxHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 7);
+			},
+			deviveSbhHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 8);
+			},
+			deviveSbHandleAvatarSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 9);
+			},
+			//上传成功后的设备照片
+			deviceHandleSuccess(response, file, fileList) {
+				this.installPic(response, file, fileList, 2);
+			},
+			//设备点击已上传的文件链接时的钩子
+			deviceHandlePreview(file) {
+				this.$emit("changeDialogImg", file);
+			},
+			//记录上传控件
+			deviceHandleMouseover(index, uploadname) {
+				this.curIndex = index;
+				this.uplodVueComponent = this.$refs[uploadname][0];
+			},
+			//复制当前添加的 1车子 2设备照片 3删除对应设备照片 4车架号照片 5车牌号照片 6铭牌照片 7设备走线照片 8设备号 9设备照片
+			installPic(response, file, fileList, type) {
+				//安装车照片
+				if(type == 1 && file.status == "success") {
+					let carPictures = this.ruleForm.pictures;
+					if(carPictures[this.carCurIndex].piclink == '') {
+						carPictures.push({
+							picdesc: "其它部分照片",
+							piclink: ""
+						});
+					}
+					carPictures.splice(this.carCurIndex, 1, {
+						picdesc: carPictures[this.carCurIndex].picdesc,
+						piclink: response
+					});
+				}
+				if(type == 4 && file.status == "success") {
+					this.ruleForm.pictures.splice(0, 1, {
+						picdesc: "车架号",
+						piclink: response
+					});
+				}
+				if(type == 5 && file.status == "success") {
+					this.ruleForm.pictures.splice(1, 1, {
+						picdesc: "车牌号",
+						piclink: response
+					});
+				}
+				if(type == 6 && file.status == "success") {
+					this.ruleForm.pictures.splice(2, 1, {
+						picdesc: "铭牌号",
+						piclink: response
+					});
+				}
+
+				//设备前三张
+				if(type == 7 && file.status == "success") {
+					var index = this.uplodVueComponent.data.ind,
+						pic;
+					pic = {
+						picdesc: "设备走线照片",
+						piclink: response
+					}
+					this.ruleForm.installDetails[index].pictures.splice(this.curIndex, 1, pic);
+				}
+				if(type == 8 && file.status == "success") {
+					var index = this.uplodVueComponent.data.ind,
+						pic;
+					pic = {
+						picdesc: "设备号照片",
+						piclink: response
+					}
+					this.ruleForm.installDetails[index].pictures.splice(this.curIndex, 1, pic);
+				}
+				if(type == 9 && file.status == "success") {
+					var index = this.uplodVueComponent.data.ind,
+						pic;
+					pic = {
+						picdesc: "设备照片",
+						piclink: response
+					}
+					this.ruleForm.installDetails[index].pictures.splice(this.curIndex, 1, pic);
+				}
+				//新增设备照片
+				if(type == 2) {
+					var index = this.uplodVueComponent.data.ind,
+						pic;
+					pic = {
+						picdesc: this.ruleForm.installDetails[index].pictures[this.curIndex].picdesc,
+						piclink: response
+					}
+					if(this.ruleForm.installDetails[index].pictures[this.curIndex].piclink == '') {
+						this.ruleForm.installDetails[index].pictures.push({
+							picdesc: "其它部分照片",
+							piclink: ""
+						});
+					}
+					this.ruleForm.installDetails[index].pictures.splice(this.curIndex, 1, pic);
+				}
+			},
+			noDeviceCheckedChange(v) {
+				if(v) {
+					this.resetForm();
+				}
+			},
+			cldeviceIsOnstate(cnum, index) {
+				let para = {
+					id: cnum
+				};
+				this.realTimeRefreshLoading = true;
+				//添加设备自动识别是否在线
+				cldeviceIsOnstate(para).then((res) => {
+					this.realTimeRefreshLoading = false;
+					if(res.data.result.code == 0) {
+						if(res.data.data)
+							if(res.data.data.realdata)
+								this.ruleForm.installDetails[index].onlinestatus = res.data.data.realdata.istate == 1 ? 1 : 0;
+					}
+				});
+			},
+			//安装位置初始化
+			changeInstallDecode(r) {
+				if(!r || this.InstallPositionArray.length > 0) return;
+				this.codeloading = true;
+				getInstallPositionCode().then((res) => {
+					this.InstallPositionArray = res.data.data.records;
+					this.codeloading = false;
+				});
+			},
+			//切换当前页
+			dhandleCurrentChange(val) {
+				this.dcurrentPage = val;
+				this.searchDevceinfo();
+			},
+			//切换每页显示数量
+			dhandleSizeChange(val) {
+				this.dpageSize = val;
+				this.searchDevceinfo();
+			},
+			// 接受时间格式化
+			endDateFormat(row, col) {
+				if(row.START_TIME_)
+					return util.formatDate.format(new Date(row.START_TIME_), 'yyyy-MM-dd hh:mm:ss');
+			},
+			// 提交时间格式化
+			startDateFormat(row, col) {
+				if(row.END_TIME_)
+					return util.formatDate.format(new Date(row.END_TIME_), 'yyyy-MM-dd hh:mm:ss');
+			},
+			//更换卡
+			replaceCard(item, index,alldata) {
+				this.selectFormdetail = true;
+				this.prodcategory = 'C';
+				this.searchDevceinfo();
+				item.index = index - 1;
+				item.isReplaceCard = true;
+				this.oldDevice = item;
+				this.newID = alldata;
+			},
+			//更换设备
+			replaceDevice(item, index,alldata) {
+				this.selectFormdetail = true;
+				this.prodcategory = 'EC';
+				this.searchDevceinfo();
+				item.index = index - 1;
+				item.isReplaceCard = false;
+				this.oldDevice = item;
+				this.newID = alldata;
+			},
+			//地址选择刷新地图坐标
+			addressChanges(resw) {
+				this.$refs.vueAmap.geocoder(resw.join(""), (res) => {
+					this.ruleForm.lng = res.location.lng;
+					this.ruleForm.lat = res.location.lat;
+					this.ruleForm.aftersaleaddress = resw.join("");
+				});
+			},
+			//地址改变刷新地图坐标
+			refmap() {
+				this.$nextTick(function(){
+					if(this.$refs.vueAmap)
+					this.$refs.vueAmap.geocoder(this.ruleForm.aftersaleaddress, (res) => {
+						this.ruleForm.lng = res.location.lng;
+						this.ruleForm.lat = res.location.lat;
+					});
+				});
+			},
+			draggerMapMarker(address, lnglatXY, type) {
+				this.ruleForm.aftersaleaddress = address;
+			},
+			//提交拒绝理由
+			addRefuseHandling(n) {
+				let addformpara = {
+					taskId: this.$store.state.formObj.id,
+					properties: {}
+				};
+				addformpara.properties = {
+					result: n == 0 ? false : true,
+					remark: this.rejectRemarks
+				}
+				this.addLoading = true;
+				//提交审核结果
+				addApprovaperSendVindicate(addformpara).then((res) => {
+					this.addLoading = false;
+					if(res.data.result.code == 0) {
+						if(addformpara.properties.result) {
+							this.$message({
+								message: '审核成功！',
+								type: 'success'
+							});
+						} else {
+							this.$message({
+								message: '拒绝成功！',
+								type: 'success'
+							});
+						}
+						//初始化待办数量
+						this.$store.dispatch('initFormNum');
+						this.closeDialog();
+					}
+				}).catch((error) => {
+					this.addLoading = false;
+				});
+				this.rejectRemarks = '';
+			},
+			//施工接单是否通过
+			resultChange(item) {
+				this.ruleForm.result = item == '0' ? true : false;
+			},
+			//施工接单通过审核
+			passConstructionOrder() {
+				let addformpara = {
+					taskId: this.$store.state.formObj.id,
+					properties: {
+						result: this.ruleForm.result
+					}
+				};
+				this.addLoading = true;
+				addApprovaperVindicateCl(addformpara).then((res) => {
+					this.addLoading = false;
+					if(res.data.result.code == 0) {
+						//初始化待办数量
+						this.$store.dispatch('initFormNum');
+						this.closeDialog();
+					}
+				});
+			},
+			//根据任务id获取表单信息
+			getFormData(obj) {
+				if(!obj) return;
+				//获取填写的任务变量值
+				let pa = {
+					taskId: obj.id
+				};
+				this.curTaskId = obj.id;
+				getvariablesSeaviceTaskInfoList(pa).then((res) => {
+					let _this = this,
+						data = res.data.data;
+					if(!data.vehicleInfo) {
+						data.vehicleInfo = _this.ruleFormStatic.vehicleInfo;
+					}
+					if(!data.vehicleInfo.receivingbank) {
+						data.vehicleInfo.receivingbank = _this.ruleFormStatic.vehicleInfo.receivingbank;
+					}
+					if(!data.assigntoGroup) {
+						data.assigntoGroup = _this.ruleFormStatic.assigntoGroup;
+					}
+					this.ruleFormStatic = data;
+					this.getCustoHistoryInfo(data);
+				}).catch((error) => {});
+			},
+			//实时获取设备位置 和 在线情况
+			realTimeRefreshPro(gmapname) {
+				let _this = this,
+					pro = _this.ruleFormStatic,
+					len = pro.afterSaleDetails.length;
+				if(_this.$refs[gmapname]) _this.$refs[gmapname].clearMap();
+				if(len > 0) {
+					let i = _this.indDe,
+						para = {
+							id: pro.afterSaleDetails[i].packinfo.E_PRODUNUM
+						};
+					_this.realTimeRefreshLoading = true;
+					async.waterfall([
+						function(callback) {
+							cldeviceIsOnstate(para).then((res) => {
+								let data = res.data.data.realdata;
+
+								callback(null, data);
+							});
+
+						},
+						function(data, callback) {
+							if(data) {
+								if(data.lng == 0 || data.lat == 0) {
+									_this.ruleFormStatic.afterSaleDetails[i].curaddress = "无定位";
+									callback(null, data);
+								} else {
+									_this.$refs[gmapname].getAddress(util.transformWGStoGCJ(data.lng,data.lat),para.id,(res)=>{
+						                                        _this.ruleFormStatic.afterSaleDetails[i].curaddress = res;
+						                                        callback(null, data);
+						                                    });
+								}
+							} else {
+								_this.ruleFormStatic.afterSaleDetails[i].curaddress = "无定位";
+								callback(null, data);
+							}
+						},
+					], function(err, data) {
+						if(data) {
+							switch(data.istate) {
+								case 0:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "行驶";
+									break;
+								case 1:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "离线";
+									break;
+								case 2:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "停车";
+									break;
+								case 3:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "报警";
+									break;
+								case 4:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "无效定位";
+									break;
+								case 5:
+									_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "未定位";
+									break;
+								case 1000:
+						                                      _this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "在线";
+						                                	break;
+							}
+							_this.ruleFormStatic.afterSaleDetails[i].recvtime = data.recvtime;
+						} else {
+							_this.ruleFormStatic.afterSaleDetails[i].curaddress = "无定位";
+							_this.ruleFormStatic.afterSaleDetails[i].curonlinestatus = "未在线";
+						}
+						_this.realTimeRefreshLoading = false;
+						_this.indDe++;
+						if(_this.indDe < len) _this.realTimeRefreshPro(gmapname);
+						if(_this.indDe == len) _this.indDe = 0;
+					});
+				}
+			},
+			//废除订单
+			comfirDelOrder() {
+				let para = {
+					id: this.$store.state.formObj.processInstanceId,
+					reson: ''
+				}
+				deleteProcess(para).then((res) => {
+					if(res.data.result.code == 0) {
+						this.$router.back(-1);
+					}
+				});
+			},
+			//维修施工提交
+			wxaddRefuseHandling() {
+				let addformpara = {
+						taskId: this.curTaskId,
+						properties: {}
+					},
+					flag = true,
+					carTmp = [],
+					pics = this.ruleForm.pictures;
+				addformpara.properties = {
+					afterSaleDetails: [],
+					pictures: [],
+					remark: this.rejectRemarks,
+					result: this.ruleForm.result
+				}
+				pics.forEach((pic, index) => {
+					if(pic.piclink != '') {//有照片时
+						carTmp.push({
+							picdesc: pic.picdesc,
+							piclink: pic.piclink
+						});
+					}else{//无照片时
+						if (carTmp.length == 0 ) {//一张车辆照片没有时
+							this.$message({
+								message: '请至少上传3张车辆照片！',
+								type: 'warning'
+							});
+							flag = false;
+						}
+					}
+				});
+				if (carTmp.length < 3 ) {//车辆照片不足3张时
+					this.$message({
+						message: '请至少上传3张车辆照片！',
+						type: 'warning'
+					});
+					flag = false;
+				}
+				addformpara.properties.pictures = carTmp;
+
+				
+				this.ruleForm.installDetails.forEach((res, index) => {
+					if(!res.isReplaceCard) {//设备
+						if(!res.installpositioncode) {
+							this.$message({
+								showClose: true,
+								message: '安装位置必须选',
+								type: 'warning'
+							});
+							flag = false;
+							return false;
+						}
+
+						let pics = res.pictures,
+							tmp = [];
+						addformpara.properties.afterSaleDetails.push({
+							actiontype: 'REPLACE',
+							ID: res.oldDeviceId,
+							newinstalldetail: {
+								installpositioncode:'',
+								actionresult: res.remark,
+								onlinestatus: res.onlinestatus,
+								pictures: []
+							}
+						});
+						if(isNaN(parseInt(res.installpositioncode, 10))) {
+							addformpara.properties.afterSaleDetails[index].newinstalldetail.installpositioncode = res.installpositionname;
+						} else {
+							addformpara.properties.afterSaleDetails[index].newinstalldetail.installpositioncode = res.installpositioncode;
+						}
+						addformpara.properties.afterSaleDetails[index].newinstalldetail.packid = res.packid;
+						pics.forEach((pic, index) => {
+							if(pic.piclink != '') {
+								tmp.push({
+									picdesc: pic.picdesc,
+									piclink: pic.piclink
+								});
+							}
+						});
+						if(tmp.length < 3) {
+							this.$message({
+								showClose: true,
+								message: '设备的照片必须上传三张',
+								duration: 5000,
+								type: 'warning'
+							});
+							flag = false;
+							return false;
+						}
+						addformpara.properties.afterSaleDetails[index].newinstalldetail.pictures = tmp;
+					} else {//卡
+						addformpara.properties.afterSaleDetails.push({
+							actiontype: 'REPLACE',
+							ID: res.oldDeviceId,
+							installDetail: {
+								simId: ''
+							}
+						});
+						addformpara.properties.afterSaleDetails[index].installDetail.simId = res.simId;
+					}
+				});
+				if(!flag) return;
+				// this.addLoading = true;
+				//提交审核结果
+				addApprovaperSendVindicate(addformpara).then((res) => {
+					this.addLoading = false;
+					if(res.data.result.code == 0) {
+						this.$message({
+							message: '维修施工成功',
+							type: 'success'
+						});
+						//初始化待办数量
+						this.$store.dispatch('initFormNum');
+						this.closeDialog();
+					}
+				}).catch((error) => {
+					this.addLoading = false;
+				});
+			},
+			//维修施工提交
+			wxaddRefuseHandlingSh() {
+				let addformpara = {
+						taskId: this.curTaskId,
+						properties: {}
+					},
+					flag = true,
+					carTmp = [],
+					pics = this.ruleForm.pictures;
+				addformpara.properties = {
+					afterSaleDetails: [],
+					pictures: [],
+					remark: this.rejectRemarks,
+					result: true
+				}
+				pics.forEach((pic, index) => {
+					if(pic.piclink != '') {
+						carTmp.push({
+							picdesc: pic.picdesc,
+							piclink: pic.piclink
+						});
+					}
+				});
+				addformpara.properties.pictures = carTmp;
+				this.ruleForm.installDetails.forEach((res, index) => {
+					if(!res.isReplaceCard) {
+						if(!res.installpositioncode) {
+							this.$message({
+								showClose: true,
+								message: '安装位置必须选',
+								type: 'warning'
+							});
+							flag = false;
+							return false;
+						}
+
+						let pics = res.pictures,
+							tmp = [];
+						addformpara.properties.afterSaleDetails.push({
+							actiontype: 'REPLACE',
+							ID: res.oldDeviceId,
+							newinstalldetail: {
+								installpositioncode:'',
+								actionresult: res.remark,
+								onlinestatus: res.onlinestatus,
+								pictures: []
+							}
+						});
+						if(isNaN(parseInt(res.installpositioncode, 10))) {
+							addformpara.properties.afterSaleDetails[index].newinstalldetail.installpositioncode = res.installpositionname;
+						} else {
+							addformpara.properties.afterSaleDetails[index].newinstalldetail.installpositioncode = res.installpositioncode;
+						}
+						addformpara.properties.afterSaleDetails[index].newinstalldetail.packid = res.packid;
+						pics.forEach((pic, index) => {
+							if(pic.piclink != '') {
+								tmp.push({
+									picdesc: pic.picdesc,
+									piclink: pic.piclink
+								});
+							}
+						});
+						if(tmp.length < 3) {
+							this.$message({
+								showClose: true,
+								message: '设备的照片必须上传三张',
+								duration: 5000,
+								type: 'warning'
+							});
+							flag = false;
+							return false;
+						}
+						addformpara.properties.afterSaleDetails[index].newinstalldetail.pictures = tmp;
+					} else {
+						addformpara.properties.afterSaleDetails.push({
+							actiontype: 'REPLACE',
+							ID: res.oldDeviceId,
+							installDetail: {
+								simId: ''
+							}
+						});
+						addformpara.properties.afterSaleDetails[index].installDetail.simId = res.simId;
+					}
+				});
+				if(!flag) return;
+				this.addLoading = true;
+				//提交审核结果
+				addApprovaperSendVindicate(addformpara).then((res) => {
+					this.addLoading = false;
+					if(res.data.result.code == 0) {
+						this.$message({
+							message: '维修审核成功',
+							type: 'success'
+						});
+						//初始化待办数量
+						this.$store.dispatch('initFormNum');
+						this.closeDialog();
+					}
+				}).catch((error) => {
+					this.addLoading = false;
+				});
+			},
+			/* 提交表单数据 */
+			submitForm(formName) {
+				this.$refs[formName].validate((valid) => {
+					if(valid) {
+						let addformpara = {
+							taskId: this.curTaskId,
+							properties: {}
+						};
+						addformpara.properties = {
+							assigntogroup: this.ruleForm.send_work_group.id,
+							assignto: this.ruleForm.send_work_user.ID,
+							contactperson:this.ruleForm.contactperson,
+							contactmobile:this.ruleForm.contactmobile,
+							aftersaledate:this.ruleForm.aftersaledate,
+							aftersaleaddress:this.ruleForm.aftersaleaddress,
+							result: this.ruleForm.result,
+							remark: this.ruleForm.remark
+						};
+						this.addLoading = true;
+						//提交审核结果
+						addApprovaperSendVindicate(addformpara).then((res) => {
+							this.addLoading = false;
+							if(res.data.result.code == 0) {
+								this.$message({
+									message: '维修派单提交成功！',
+									type: 'success'
+								});
+								//初始化待办数量
+								this.$store.dispatch('initFormNum');
+								this.closeDialog();
+							}
+						}).catch((error) => {
+							this.addLoading = false;
+						});
+					}
+				});
+			},
+			//点击下拉选取安装组信息
+			visInitGroup(r) {
+				this.isFlag = false;
+				if(!r || this.workGroup.length > 0) return;
+				let para = {
+					grouptype: 'INSTALL',
+					deptid: 58,
+					showCount: 200
+				};
+				this.groupLoading = true;
+				getPdInstallGroupList(para).then((res) => {
+					this.workGroup = res.data.data.records;
+					this.groupLoading = false;
+				});
+			},
+			//默认选中组人员
+			getPdInstallGroupList(r) {
+				let para = {
+					grouptype: 'INSTALL',
+					deptid: 58,
+					showCount: 200
+				};
+				this.groupLoading = true;
+				getPdInstallGroupList(para).then((res) => {
+					this.workGroup = res.data.data.records;
+					this.groupLoading = false;
+					if(this.isFlag) {
+						this.workGroup.forEach((v) => {
+							if(v.id == this.ruleFormStatic.installGroupInfo.id) {
+								this.ruleForm.send_work_group = v;
+								return false;
+							}
+						});
+					}
+				});
+			},
+			//安装组改变
+			changeInstallGrounp(obj) {
+				this.ruleForm.send_work_user = '';
+				this.workUser = '';
+				if(obj == '') return;
+				this.getPdInstallUserList(obj.id);
+			},
+			//查询组员根据组id
+			getPdInstallUserList(gid) {
+				let para = {
+					groupid: gid,
+					showCount: 200
+				};
+				this.userLoading = true;
+				this.searchInstallUserLoc(gid);
+				getPdInstallUserList(para).then((res) => {
+					this.workUser = res.data.data.records;
+					this.userLoading = false;
+					if(this.isFlag) {
+						this.workUser.forEach((v) => {
+							if(v.userid == this.ruleFormStatic.installEmployee.userid) {
+								this.ruleForm.send_work_user = v;
+								return false;
+							}
+						});
+					}
+				});
+			},
+			//查询选择组安装人员的地理位置
+			searchInstallUserLoc(gid){
+				this.groupid = gid;
+				this.$refs.mapPositon.addMarker();
+			},
+			//父级如果是点击查询回调
+			getCustoHistoryInfo(row) {
+				this.resetForm();
+				this.ruleFormStatic = row;
+				//查询设备实时位置
+				this.realTimeRefreshPro('vueAmap3');
+				this.cirInfoData = row.hiTasksOfRuExecution;
+				if(row.afterSaleDetails.length > 0) {
+					let carPictures = row.pictures;
+					if(row.pictures.length == 0) {
+						carPictures = [{
+								picdesc: "车架号",
+								piclink: ""
+							},
+							{
+								picdesc: "车牌号",
+								piclink: ""
+							},
+							{
+								picdesc: "铭牌号",
+								piclink: ""
+							},
+							{
+								picdesc: "其它部分照片",
+								piclink: ""
+							}
+						];
+					} else {
+						carPictures.push({
+							picdesc: "其它部分照片",
+							piclink: ""
+						});
+					}
+					this.ruleForm.pictures = carPictures;
+					if(this.stepNum != 4)
+					row.afterSaleDetails.forEach((res, index) => {
+						let installd = res.installDetail;
+						if(installd) {
+							let isReplaceCard = !res.currinstallid ? true : false;
+							this.noDeviceChecked = false;
+							installd.packInfo.isReplaceCard = isReplaceCard;
+							this.deviceCurData.push(installd.packInfo);
+							// if(!isReplaceCard) {
+							// 	let pictures = installd.pictures;
+							// 	if(pictures.length == 0) {
+							// 		pictures = [{
+							// 				picdesc: "设备走线照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "设备照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "设备号照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "其它部分照片",
+							// 				piclink: ""
+							// 			}
+							// 		];
+							// 	} else {
+							// 		pictures.push({
+							// 			picdesc: "其它部分照片",
+							// 			piclink: ""
+							// 		});
+							// 	}
+								
+								//添加设备信息
+								this.ruleForm.installDetails.push({
+									installpositioncode: installd.installpositionname,
+									installpositionname: installd.installpositioncode,
+									packid: installd.packid,
+									E_PRODMODEL: installd.packInfo.E_PRODMODEL,
+									E_PRODUNUM: installd.packInfo.E_PRODUNUM,
+									isReplaceCard: isReplaceCard,
+									oldDeviceId: installd.packid,
+									pictures: installd.pictures,
+									onlinestatus: installd.onlinestatus ? 1 : 0,
+									remark: installd.actionresult
+								});
+							// } else {
+							// 	//添加卡信息
+							// 	this.ruleForm.installDetails.push({
+							// 		isReplaceCard: isReplaceCard,
+							// 		simId: row.SIMCARDID,
+							// 		onlinestatus: 1,
+							// 		oldDeviceId: installd.packid,
+							// 		remark: installd.actionresult,
+							// 		remark: '',
+							// 		pictures: [{
+							// 				picdesc: "设备走线照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "设备照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "设备号照片",
+							// 				piclink: ""
+							// 			},
+							// 			{
+							// 				picdesc: "其它部分照片",
+							// 				piclink: ""
+							// 			}
+							// 		]
+							// 	});
+							// }
+
+						}
+					});
+				}
+				if(row.assigntoEmployeeInfo){
+					this.installUserId = row.assigntoEmployeeInfo.ID;
+				}
+				this.ruleForm.aftersaleaddress = row.aftersaleaddress;
+				this.ruleForm.aftersaledate = row.aftersaledate;
+				this.ruleForm.contactmobile = row.contactmobile;
+				this.ruleForm.contactperson = row.contactperson;
+				this.refmap();
+				this.isFlag = true;
+			},
+			//关闭当前窗口
+			closeDialog() {
+				this.$router.back(-1);
+			},
+			//派单信息清空
+			resetForm() {
+				this.ruleForm = {
+					aftersaledate: util.formatDate.format(new Date(), 'yyyy-MM-dd hh:mm:ss'),
+					aftersaleaddress: '',
+					contactperson: '',
+					contactmobile: '',
+					aftersaleaddressCity: [],
+					send_work_group: '',
+					send_work_user: '',
+					installDetails: [],
+					result: true,
+					pictures: [{
+							picdesc: "车架号",
+							piclink: ""
+						},
+						{
+							picdesc: "车牌号",
+							piclink: ""
+						},
+						{
+							picdesc: "铭牌号",
+							piclink: ""
+						},
+						{
+							picdesc: "其它部分照片",
+							piclink: ""
+						}
+					],
+					remark: ''
+				};
+				this.carPicValue = '';
+				this.deviceCurData = [];
+			}
+		},
+		created() {
+			if(this.$store.state.formObj) {
+				this.stepNum = this.$store.state.formObj.step;
+				this.getFormData(this.$store.state.formObj);
+			}
+		},
+		mounted() {
+			let tempStepNum = 0;
+			tempStepNum = (this.stepNum-1);
+			if(tempStepNum == 2 || tempStepNum == 3) tempStepNum = 2;
+			this.$emit("changeStep", tempStepNum);
+			//如果是审核为安装人员打分 就不显示  打分原件的默认提交和备注框
+			if(this.stepNum == 5) this.$refs.refEvaluate.isShowAdd = false;
+		}
+	}
+</script>

@@ -1,0 +1,712 @@
+/* 
+* @description: 公用reset样式
+* @author: wp 
+* @update: 2017-05-27
+*/ 
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+body {
+  font-size: 1.4em;
+  line-height: 1.5;
+  -webkit-overflow-scrolling: touch;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px
+}
+
+::-webkit-scrollbar-button:vertical {
+  display: none
+}
+
+::-webkit-scrollbar-corner,
+::-webkit-scrollbar-track {
+  background-color: #e2e2e2
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, .3)
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+  background-color: rgba(0, 0, 0, .35)
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+  background-color: rgba(0, 0, 0, .38)
+}
+img {
+  border: 0 none;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+canvas {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+textarea {
+  padding: 5px 12px;
+  overflow-y: auto;
+  resize: vertical;
+  outline: none;
+  font-weight: 500;
+  min-height: 100px;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+}
+@media (min-width: 1200px) and (max-width: 1440px) {
+  textarea {
+    min-height: 80px;
+  }
+}
+input,
+button,
+select,
+textarea {
+  resize: none;
+}
+.touch input,
+.touch button,
+.touch textarea,
+.touch select {
+  -webkit-appearance: none;
+}
+a {
+  text-decoration: none;
+}
+ul,
+ol {
+  list-style: none outside none;
+}
+@font-face {
+  font-family: "iconfont";
+  src: url('../font/iconfont.eot?t=1496732827908'); /* IE9*/
+  src: url('../font/iconfont.eot?t=1496732827908#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../font/iconfont.woff?t=1496732827908') format('woff'), /* chrome, firefox */
+  url('../font/iconfont.ttf?t=1496732827908') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('../font/iconfont.svg?t=1496732827908#iconfont') format('svg'); /* iOS 4.1- */
+}
+@font-face {
+  font-family: 'hxy';
+  src: url('../font/F035.eot');
+  src: url('../font/F035.eot?#iefix') format('embedded-opentype'),
+  url('../font/F035.woff') format('woff'),
+  url('../font/F035.TTF') format('truetype'),
+  url('../font/F035.svg#Sri-TSCRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.el-badge__content{
+  line-height: 16px;
+}
+.f16{
+  font-size: 1.6rem;
+}
+.mr5{
+	margin-right:5px;
+}
+.c999{
+  color: #999;
+}
+.ft_red{
+	color:red;
+}
+.w100{
+  width:100%;
+}
+.text-right {
+  text-align: right;
+}
+.mlr15{margin:0 5px 0 1px;}
+.mlr11{margin:0 1px 0 1px;}
+.mlr51{margin:0 5px 0 1px;}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label.el-form-item__label {
+  width: 96px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0 !important;
+  margin-bottom: 0;
+  width: 50%;
+}
+.toolbar{
+  background: none !important; 
+  margin: 0 !important; 
+  padding: 0 !important;
+}
+.desksetion div.el-collapse-item__wrap{
+  padding: 0;
+}
+.ipmt5{
+  margin-top: 5px !important;
+}
+.el-collapse-item__header i.el-collapse-item__header__arrow{
+  float: right;
+  margin-right:14px;
+  margin-top: 10px;
+  color:#888;
+}
+.el-table .cell, .el-table th>div{
+  padding:0 1px !important;
+}
+.mobileBdpdt20 .el-dialog__body{
+  padding: 0 10px 20px 10px;
+}
+.el-dialog__body{
+  overflow: hidden;
+  padding: 0 10px 10px 10px;
+}
+.el-table__fixed-right{
+  box-shadow: none !important;
+  border-left: 1px solid #E1E6EB;
+}
+.fltIcon{
+  position: absolute;
+  right: 15px;
+  padding: 6px;
+  top: 18px;
+  z-index: 2;
+}
+.el-tree-node__content{
+  height: 30px;
+}
+.iconfont {
+  font-family:"iconfont" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.el-collapse-item__content{
+  padding-bottom: 15px;
+}    
+/*高德地图样式 自定义点样式 start*/                 
+div.userMaker span.name{
+  color: #ff5722;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+}
+div.userMaker div.droplet_me{
+  width: 2.5em;
+  height: 2.5em;
+  position: relative;
+  border-radius: 50%;
+  background: #333333;
+  float: left;
+  box-shadow: inset -1px 1px 4px 2px #444, inset 1px -1px 4px 2px #222;
+  -webkit-transition: all 1s;
+  -moz-transition: all 1s;
+  transition: all 1s;
+  -webkit-animation: bs linear 2s 1.5s infinite;
+  -moz-animation: bs linear 2s 1.5s infinite;
+  animation: bs linear 2s 1.5s infinite;
+}
+@-webkit-keyframes bs {
+  0% {
+    box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 0px 0 red;
+  }
+  50% {
+    box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 20px 0 #1affff;
+  }
+  100% {
+    box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 0px 0 red;
+  }
+}
+@keyframes bs {
+  0% {
+    box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 0px 0 red;
+  }
+  50% {
+    box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 20px 0 #1affff;
+  }
+  100% {
+      box-shadow: inset -1px 1px 3px 2px #444444, inset 1px -1px 3px 2px #222222, 0 0 0px 0 red;
+  }
+}
+
+
+div.droplet {
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 80% 0 55% 50% / 55% 0 80% 50%;
+  background-color: #000;
+  transform: rotate(135deg);
+  overflow: hidden;
+}
+div.droplet img{
+  width: 100%;
+  height: 100%;
+  transform: rotate(-135deg);
+}
+
+/*高德地图样式 自定义点样式 end*/         
+/* 年终打分模板 start*/
+.dftable input.el-input__inner{
+  border: 0;
+  background: transparent;
+  text-align: center;
+}
+.dftable .el-button--mini{
+  padding: 7px;
+}
+/* 年终打分模板 end */
+
+
+
+/*查询公用flex布局页 start*/
+.flexSearchForm{
+  display: flex;
+}
+.flexSearchForm .colflex{
+  flex:1;
+  overflow: hidden;
+}
+.flexSearchForm .colflex1{
+  flex:0 0 157px;
+  width:157px;
+}
+.flexSearchForm .colflex3{
+  flex:0 0 180px;
+  width:180px;
+}
+.flexSearchForm .colflex4{
+  flex:0 0 190px;
+  width:190px;
+}
+.flexSearchForm .colflex .sf100{
+  width: 100%;
+}
+.flexSearchForm .colflex .sf100 .el-form-item__content{
+  width: 100%;
+}
+.flexSearchForm .colflex2{
+  flex:0 0 277px;
+  width:277px;
+}
+/*查询公用flex布局页 end*/
+span.comnum{
+  color: #00BCD4;
+  font-weight: bold;
+}
+span.iconcomnum{
+  color: #67C23A;
+}
+span.iconcomnum i{
+  font-size: 2rem;
+  vertical-align:middle;
+}
+
+.el-collapse-item__header{
+  background-color:#f5f5f5;
+  color: #444;
+  font-weight: bold;
+}
+.el-collapse-item__content{
+  padding-top: 5px;
+}
+.el-date-editor .el-range-separator{padding: 0;}
+
+.yewu .el-tabs__header{
+  margin: 0 0 10px;
+}
+.yewu .el-input__inner{
+  height: 35px;
+}
+.yewu .el-range-editor.el-input__inner{
+  padding: 0 10px;
+}
+.yewu .el-button--mini{
+  padding: 7px 10px;
+}
+.yewu .el-dropdown .el-button--mini{
+  padding: 7px 8px;
+}
+.yewu .el-input-number__increase, .yewu .el-input-number__decrease{
+  top: 1px;
+  height: 33px;
+  line-height: 33px;
+}
+.yewu .el-radio-button--small .el-radio-button__inner{
+  padding: 10px 15px;
+}
+.el-table div.cell .el-button--medium{
+  padding: 10px 20px;
+}
+
+
+.mw810 .el-dialog{
+  min-width: 810px;
+}
+.mw630 .el-dialog{
+  min-width: 630px;
+}
+.mw580 .el-dialog{
+  min-width: 580px;
+}
+.content-container .content-wrapper,.gisnewTab{
+  height: 100%;
+}
+.gisnewTab{
+  position: relative;
+  overflow: hidden;
+}
+.gisnewTab .el-button,.gisnewTab a{
+  position: absolute;
+  top:40px;
+  right: 0;
+  z-index: 1;
+}
+/*********物流模板样式开始************&&&&&&&&&&&&&&&&&&&&&&&&&&**************************************************************************************************************/
+.logistice_content{
+  min-height: 100px;
+}
+.logistice_content .point-time {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  top: 17px;
+  left: 86px;
+  background: #1c87bf;
+  margin-left: -4px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px #fff;
+}
+
+.logistice_content .text-red {
+  color: #f6393f;
+}
+
+.logistice_content .text-blue {
+  color: #1c87bf;
+}
+
+.logistice_content .text-green {
+  color: #00C1DE;
+}
+
+.logistice_content .text-yellow {
+  color: #ffb902;
+}
+
+.logistice_content .text-purple {
+  color: #d32d93;
+}
+
+.logistice_content .point-red {
+  background-color: #f6393f;
+}
+
+.logistice_content .point-blue {
+  background-color: #1c87bf;
+}
+
+.logistice_content .point-green {
+  background-color: #95c91e;
+}
+
+.logistice_content .point-yellow {
+  background-color: #ffb902;
+}
+
+.logistice_content .point-purple {
+  background-color: #d32d93;
+}
+.logistice_content article {
+  position: relative;
+  padding: 20px;
+}
+.logistice_content article > h3 {
+  width: 15%;
+  height: 20px;
+  line-height: 20px;
+  text-align: right;
+  font-size: 1.4em;
+  color: #1d1d1d;
+  padding: 10px 0 20px;
+}
+.logistice_content article section {
+  padding: 0 0 17px;
+  position: relative;
+}
+.logistice_content article section:before {
+  content: "";
+  width: 5px;
+  top: 17px;
+  bottom: -17px;
+  left: 86px;
+  background: #e6e6e6;
+  position: absolute;
+}
+.logistice_content article section:last-child:before {
+  display: none;
+}
+.logistice_content article section time {
+  width: 71px;
+  display: block;
+  position: absolute;
+}
+.logistice_content article section time > span {
+  display: block;
+  text-align: right;
+}
+.logistice_content article section div.aside {
+  color: #3a3a38;
+  margin-left: 110px;
+  padding-bottom: 15px;
+}
+.logistice_content article section .brief {
+  color: #9f9f9f;
+}
+/*********物流模板样式结束************&&&&&&&&&&&&&&&&&&&&&&&&&&**************************************************************************************************************/
+/*登录*/
+.icon-qq:before { content: "\e643"; }
+.icon-qunfengweixin:before { content: "\e698"; }
+
+.icon-2daohang:before { content: "\e63d"; }
+.icon-jinlingyingcaiwangtubiao100:before { content: "\e703"; }
+.icon-cheliang:before { content: "\e667"; }
+.icon-pinglun:before { content: "\e68a"; }
+.icon-zhiling:before { content: "\e6b2"; }
+.icon-yewu:before { content: "\e671"; }
+.icon-jiaoche:before { content: "\e605"; }
+.icon-tongjibaobiao:before { content: "\e61e"; }
+.icon-caiwuguanli:before { content: "\e624"; }
+.icon-jichushuju:before { content: "\e62b"; }
+.icon-shouye_shouye:before { content: "\e835"; }
+.icon-yunkucun:before { content: "\e602"; }
+.icon-wenzhang:before { content: "\e603"; }
+.icon-xiaoxi1:before { content: "\e60a"; }
+.icon-yijianfankui:before { content: "\e60c"; }
+.icon-zhiding:before{content: "\e60b";}
+.icon-kefuzhichi:before{content: "\e605";}
+.icon-cha:before { content: "\e7b8"; }
+.icon-mima:before { content: "\e60d"; }
+.icon-jiantou1you:before { content: "\e635"; }
+.icon-ren:before { content: "\e6ec"; }
+.icon-gongzuotai:before {content: "\e7ec";}
+.icon-more:before {content: "\e684";}
+.icon-tihuan:before {content: "\e65e";}
+
+.icon-jiaoseshezhi:before { content: "\e64e"; }
+.icon-shuaxin:before { content: "\e769"; }
+.icon-pinglun3:before { content: "\e648"; }
+.icon-gengduo1:before { content: "\e64f"; }
+.icon-icon:before { content: "\e649"; }
+.icon-tongzhigonggao:before { content: "\e64b"; }
+.icon-wenjian:before { content: "\e653"; }
+.icon-liuyanpinglun:before { content: "\e650"; }
+.icon-list-2-copy:before { content: "\e64a"; }
+.icon-xiazai:before { content: "\e651"; }
+.icon-shebeitihuan:before { content: "\e655"; }
+.icon-msnui-close:before { content: "\e6d0"; }
+.icon-quanping1:before { content: "\e656"; }
+.icon-suoxiao:before { content: "\e822"; }
+.icon-bingtu:before { content: "\e689"; }
+.icon-xinwen:before { content: "\e657"; }
+
+/*基础*/
+.icon-bianji1:before { content: "\e609"; }
+.icon-p-delet:before { content: "\e66d"; }
+.icon-xiangqing:before { content: "\e637"; }
+.icon-duigou:before { content: "\e606"; }
+
+.operate{font-size:2rem;cursor: pointer;margin-left: -10px;}
+.operate-xiangqing{color:#ff9000;}
+.operate-bianji{color:#20a0ff;}
+.operate-duigou{color:#00C1DE;}
+.operate-cha{color:#F64545;}
+.operate-shanchu{color:#808080;}
+.operate-tianjia{color:#00C1DE;}
+.operate-p-delet{color:#515151;}
+.operate-gray{color:#d7d7d7;}
+.operate-bianji-coc{color:#00C1DE;}
+.operate-color{color:#B0B0B0;}
+.operate-position{margin-left: -10px;font-weight: bold;font-size: 1.7rem;}
+.operate-jiebang{color:#FF3B3B;}
+.operate-bangding{color:#00C1DE;}
+.white{color:#fff;margin-left: -14px;font-size: 0.6rem;}
+.gengduo{color: #000;float: right;}
+/*平台*/
+.icon-fasongduilie:before { content: "\e626"; }
+.icon-fasong:before { content: "\e600"; }
+.icon-fasongshibai:before { content: "\e608"; }
+.icon-zhongxinfasong:before { content: "\e661"; }
+.icon-saomiao:before { content: "\e641"; }
+.icon-piliang:before { content: "\e642"; }
+
+.operate-fasongduilie{color:#5B9FC9;}
+.icon-cheliang1:before { content: "\e61f"; }
+.icon-pingtai:before { content: "\e616"; }
+.icon-shebeianzhuang:before { content: "\e6c2"; }
+.icon-gongzuotai1:before{content: "\e715"}
+/*首页*/
+.icon-cha1:before { content: "\e807"; }
+.icon-jianhao:before { content: "\e61a"; }
+.icon-fangda:before { content: "\e665"; }
+
+/*考勤*/
+.icon-qiandao:before { content: "\e617"; }
+
+/*指标*/
+.icon-zhibiao:before { content: "\e62c"; }
+/*业务*/
+.icon-car:before { content: "\e645"; }
+/*在线聊天*/
+.icon-liaotian:before {content: "\e636"; }
+/*聊天页面*/
+.icon-lianxiren1:before {content: "\e65d"; }
+.icon-qunzu:before {content: "\e63e"; }
+.icon-xiaoxi:before {content: "\e601"; }
+.icon-note:before {content: "\e61c"; }
+.icon-gengduo:before {content: "\e614"; }
+.icon-fenxiang:before {content: "\e65c"; }
+.icon-bianji:before {content: "\e625"; }
+.icon-shanchu:before {content: "\e63b"; }
+.icon-naozhong1-copy:before {content: "\e607"; }
+.icon-dizhi1:before {content: "\e612"; }
+.icon-shaixuanxuanzhong:before {content: "\e615"; }
+.icon-tianjia:before {content: "\e611"; }
+[class^="el-icon-my"], [class*=" el-icon-my"] {
+  font-family:"iconfont" !important;
+  /* 以下内容参照第三方图标库本身的规则 */
+  font-size: 16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.el-icon-my-icon-dizhi1:before {content: "\e612"; }
+
+
+
+/*新建公司 新增成功*/
+.icon-chenggongjierutongguo:before {content: "\e604"; }
+
+
+/*系统管理——用户管理*/
+.icon-gongsi:before {content: "\e60e"; }
+
+/*业务管理——绑定关系【车】【卡】【绑定】【解绑】*/
+.icon-chezuojiachepai:before {content: "\e666"; }
+.icon-qia:before {content: "\e60f"; }
+.icon-bangding:before {content: "\e619"; }
+.icon-jiechubangding:before {content: "\e61d"; }
+
+/*门户单页图标*/
+.icon-lianxi:before {content: "\e63f"; }
+.icon-fengongsixinwen:before {content: "\e64c"; }
+.icon-liwu:before {content: "\e618"; }
+.icon-gongsi:before {content: "\e647"; }
+.icon-zhankai:before {content: "\e678"; }
+
+.icon-notfind01:before {content: "\e64d"; }
+
+/*用户管理——分组权限*/
+.icon-fenzu:before {content: "\e646"; }

@@ -1,0 +1,182 @@
+
+.desksetion{
+     .el-tabs__header{
+        margin: 0;
+    }
+    .el-tabs__new-tab{
+        margin-right: 10px;
+    }
+    .el-dialog__body{
+        padding: 10px 20px;
+    }
+    .pz_titl{
+        display: block;
+        width: 100%;
+        font-size: 14px;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .desk{
+        border:0;
+        .el-collapse-item__wrap{
+            border:0;
+            background-color: #fff;
+        }
+        .el-collapse-item__header{
+            background-color: #f5f5f5;
+        }
+        .el-collapse-item__header:before{
+            content: "";
+            padding: 2px;
+            height: 14px;
+            background: #00C1DE;
+            margin-right: 8px;
+            float: left;
+            margin-top: 8px;
+        }
+        .el-input__inner{
+            height: 35px;
+            border: 1px solid #f5f5f5;
+        }
+        .el-collapse-item__content{
+            overflow: hidden;
+        }
+        .f2rc{
+            margin: 6px 0 3px 0;
+        }
+        .mt200,.mt201,.mt202,.mt203{
+            margin-bottom: 10px;
+        }
+        .noChoseIcon {
+            background: url(../../../assets/images/noChoseIcon.png) center center no-repeat;
+            background-size: 50px 50px;
+        }
+        .innerShadowGrey{
+            font-size: 24px;
+            font-weight: bold;
+            margin: 2px;
+            padding: 2px;
+            width: 100%;
+            height: 129px;
+            text-align: center;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            box-shadow: 0 3px 4px #ccc;
+            span {
+               //text-shadow: 1px 1px 2px #FFF, 0 0 0 #000;
+                line-height: 129px;
+                //color: rgba(200, 200, 200, 0.5); 
+                color:#fff;
+                letter-spacing: 3px;
+            }
+        }
+        .innerShadowGrey:hover {
+            border: 1px solid #9a9fa4;
+            box-shadow: 0 0 5px #32323a;
+        }
+        .bigdata{
+            .report-group {
+                padding: 0px;
+                .area{
+                    height: 105px;
+                    background-color: #27a9e3;
+                    padding: 0px 15px 0px 15px!important;
+                }
+                .report-group-more {
+                    height: 35px;
+                    line-height: 35px;
+                    // background-color: rgba(255, 255, 255, 0.5);
+                    opacity: 0.9;
+                    font-size: 1.2rem;
+                    display:table;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    .col-md-6{
+                        display:table-cell;
+                        color:#ffffff;
+                    }
+                }
+                .groupNameShow {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    width: 100%;
+                    #selectGroup {
+                        font-size: 22px;
+                        color:#ffffff;
+                        font-weight: bold;
+                    }
+                }
+                #selectTotalMile{
+                    color:#fff;
+                    font-weight:bold;
+                    font-size:18px;
+                }
+                .selectTotalVehicleCount {
+                    display:table;
+                    font-size: 12px;
+                    color:#fff;
+                    margin: 10px 0px 0px 0px;
+                    .col-md-6{
+                        display:table-cell;
+                    }
+                }
+            }
+            .report-time{
+                .area{
+                    background-color: #28b779;
+                }
+                .report-group-more{
+                    background-color: #17a769 !important;
+                }
+            }
+            .report-stoptime{
+                .area{
+                    background-color: #ed4e2a;
+                }
+                .report-group-more{
+                    background-color: #ce3816 !important;
+                }
+            }
+            .report-speed{
+                .area{
+                    background-color: #852b99;
+                }
+                .report-group-more{
+                    background-color: #701884 !important;
+                }
+            }
+        }
+    }
+     .time {
+        font-size: 13px;
+        color: #999;
+      }
+      
+      .bottom {
+        margin-top: 13px;
+        line-height: 12px;
+      }
+
+      .checl {
+        padding: 0;
+        float: right;
+      }
+
+      .image {
+        width: 100%;
+        display: block;
+      }
+
+      .clearfix:before,
+      .clearfix:after {
+          display: table;
+          content: "";
+      }
+      
+      .clearfix:after {
+          clear: both
+      }
+}

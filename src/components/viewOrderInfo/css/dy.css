@@ -1,0 +1,154 @@
+  body{
+    overflow: auto;
+  }
+  .gateway header{
+    height: 3rem;
+    position: relative;
+  }
+  .gateway header div.tilq_left{
+    overflow: hidden;
+    margin: 8px 0 8px 0;
+    width: 100%;
+    float: left;
+  }
+  .gateway header div.tilq_left img{
+    float: left;
+    width: 2.5rem;
+    height: 2.7rem;
+    margin: 0 10px;
+  }
+  .gateway header div.tilq_left p{
+    font-size: 1.4rem;
+    line-height: 27px;
+    overflow: hidden;
+  }
+  .gateway header span.tilq_right{
+    font-size: 2rem;
+    position: absolute;
+    right: 10px;
+    color:#27aae1;
+    top:8px;
+  }
+  .gateway aside{
+    overflow: hidden;
+    width: 100%;
+  }
+  .gateway div.el-row{
+    overflow: hidden;
+  }
+  .gateway div.el-row div.el-col.pt10{
+    padding: 10px 10px 0 10px;
+  }
+  .gateway div.el-row div.el-col.pt0{
+    padding: 0 10px 0 10px;
+  }
+  .gateway div.el-row div.dy_title{
+    overflow: hidden;
+    line-height: 2.5rem;
+    border-bottom: 1px solid #27aae1;
+    margin-bottom: 10px;
+  }
+  .gateway div.el-row span.iconfont{
+    font-size: 2.5rem;
+    float: left;
+    color: #27aae1;
+    margin-right: 0.5rem;
+  }
+  .gateway div.el-row p{
+    color: #27aae1;
+    font-weight: bold;
+    font-size:1.6rem;
+  }
+  .gateway div.el-row div.fltableflex.pt10{
+    display: flex;
+    padding-right: 0;
+  }
+  .gateway div.el-row .dy_fw_detail{
+    flex: 1;
+  }
+  .gateway div.el-row .dy_fw{
+    position: relative;
+    flex: 0 0 11rem;
+    width: 11rem;
+  }
+  .gateway div.el-row .dy_fw span{
+    position: absolute;
+    top: 10px;
+    right: 2rem;
+    color: #fff;
+    font-size:1.6rem;
+    font-weight: bold;
+  }
+  .gateway div.el-row div.content .gif_row{
+    display: flex;
+  }
+  .gateway div.el-row div.content .gif_row div.flex150{
+    width: 152px;
+    flex: 152px 0 0;
+  }
+  .gateway div.el-row div.content .gif_row div.flex1{
+    flex:1;
+  }
+  .gateway div.el-row div.content .gif_row .flimage,.gateway div.el-row div.content .gif_row .flimage img{
+    width: 100%;
+  }
+  .gateway div.el-row div.content .gif_row .flimage:first-child{
+    margin-bottom: 10px;
+  }
+  .gateway div.el-row .dy_more{
+    width: 100%;
+    margin:5px 0;
+  }
+  .gateway div.el-row .dy_more a{
+    float: right;
+    color:#000;
+    text-decoration: underline;
+  }
+  .gateway div.el-row div.content .gif_row .tp_dy_c{
+    position: relative;
+    margin-right: 10px;
+  }
+  .gateway div.el-row div.content .gif_row .tp_dy_c .shoaw_back{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.4);
+  }
+  .gateway div.el-row div.content .gif_row .tp_dy_c .shoaw_back span{
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #fff;
+    transform: translate(-50%, -50%);
+  }
+  .gateway div.el-row div.content .gif_row .tp_dy_c .shoaw_back img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    right: 0;
+  }
+  .gateway div.el-row div.content .gif_row .flimage{
+    position: relative;
+  }
+  .gateway div.el-row div.content ul.dy_tss li{
+    position: relative;
+  }
+  .gateway div.el-row div.content ul.dy_tss li:first-child{
+      margin-bottom: 10px;
+  }
+  .gateway div.el-row div.content ul.dy_tss li .icon_active{
+     position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    right: 0;
+  }
+  .gateway div.el-row div.content.lianxi p{
+    color: #000;
+    font-size: 1.4rem;
+    font-weight: 100;
+  }

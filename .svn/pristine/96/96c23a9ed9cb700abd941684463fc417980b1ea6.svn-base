@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+#leftsead {
+    position: fixed;
+    top: 50%;
+    right: 0px;
+    z-index: 100;
+}
+#leftsead li {
+    overflow: hidden;
+}
+#leftsead li a {
+    width: 28px;
+    height: 34px;
+    padding-left: 5px;
+    float: right;
+    display: block;
+    min-width: 35px;
+    max-width: 102px;
+    background: #00C1DE;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    font-size: 24px;
+    color:#fff;
+}
+#leftsead li a i{
+    font-size: 14px;
+    margin-left: 7px;
+    vertical-align: middle;
+    font-style: normal;
+}
+#leftsead li a .hides {
+	width:105px;
+	height:34px;
+          cursor: pointer;
+}
+#leftsead li a:hover {
+    transition:.8s;
+    width:102px;
+}

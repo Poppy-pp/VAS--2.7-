@@ -1,0 +1,929 @@
+<!--* 
+* @description: 报单中心   新装单——完成，保险代办——出单详情
+* @author: 王鹏 
+* @update: 王鹏 (2017-05-27 10:55) 
+*-->
+<template>
+	<section>
+		<el-row>
+			<el-col :span="24" class="cbstyle">
+				<el-collapse v-model="activeNames" class="bdcoll rpShowimgDialog">
+					<el-collapse-item title="报单信息" class="lefw10 wzpdt10" name="2">
+						<el-row>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>报单类型:</dt>
+									<dd>{{ ruleFormStatic.declaretype }}</dd>
+								</dl>
+
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>客户名称:</dt>
+									<dd v-if="ruleFormStatic.corporateInfo">{{ ruleFormStatic.corporateInfo.corpname }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+						<el-row class="mt2 pt2 bt1">
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车主姓名:</dt>
+									<dd>{{ ruleFormStatic.ownerInfo.name }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车主电话:</dt>
+									<dd>{{ ruleFormStatic.ownerInfo.mobile }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车主证件号码:</dt>
+									<dd>{{ ruleFormStatic.ownerInfo.idcard }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+						<el-row class="mt2 pt2 bt1">
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车辆型号:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.model }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车辆颜色:</dt>
+									<template v-if="ruleFormStatic.vehicleInfo.color">
+										<dd v-if="ruleFormStatic.vehicleInfo.color.indexOf('#') < 0">{{ ruleFormStatic.vehicleInfo.color }}</dd>
+										<dd v-else>
+											<span class="color_rgba" :style="{background:ruleFormStatic.vehicleInfo.color}"></span>
+										</dd>
+									</template>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车牌号:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.licenseplatenum }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车辆类型:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.vehiclePlateColor ? ruleFormStatic.vehicleInfo.vehiclePlateColor.typedesc : '暂无' }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车牌颜色:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.licenseplatecolor ? ruleFormStatic.vehicleInfo.licenseplatecolor : '暂无' }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车架号:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.vin }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>受理银行:</dt>
+									<dd>{{ ruleFormStatic.vehicleInfo.receivingbank.corpname }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车价:</dt>
+									<dd v-if="ruleFormStatic.vehicleInfo.price">{{ ruleFormStatic.vehicleInfo.price }}元</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>是否有盗抢险:</dt>
+									<dd v-if="ruleFormStatic.vehicleInfo.hastheftinsurance">{{ ruleFormStatic.vehicleInfo.hastheftinsurance == 1 ? '有':'无' }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+						<el-row class="mt2 pt2 bt1">
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>业务员:</dt>
+									<dd>{{ ruleFormStatic.salername }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>业务员联系电话:</dt>
+									<dd>{{ ruleFormStatic.salermobile }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>当前处理人:</dt>
+									<dd v-if="$store.state.formObj.assignee">{{ $store.state.formObj.assignee }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装联系人:</dt>
+									<dd>{{ ruleFormStatic.contactperson }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装联系电话:</dt>
+									<dd>{{ ruleFormStatic.contactmobile }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+						<el-row class="mt2 pt2 bt1">
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装保险产品数量:</dt>
+									<dd>{{ ruleFormStatic.installapplyinsu ? ruleFormStatic.installapplyinsu : 0 }}台</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装常规产品数量:</dt>
+									<dd>{{ ruleFormStatic.installapplymorn ? ruleFormStatic.installapplymorn : 0 }}台</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装地址:</dt>
+									<dd v-if="ruleFormStatic.installaddress">{{ ruleFormStatic.installaddress }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>预约安装日期:</dt>
+									<dd>{{ ruleFormStatic.installapplydate }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="16">
+								<dl class="dllist">
+									<dt>安装生效日期:</dt>
+									<dd>{{ ruleFormStatic.installactualdate }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="24">
+								<dl class="dllist">
+									<dt>安装说明:</dt>
+									<dd style="color:red;">默认安装的保险产品为有线车载终端(有源)，常规产品为无线车载终端(无源)。</dd>
+								</dl>
+							</el-col>
+
+							<el-col :span="12" v-if="ruleFormStatic.flowData">
+								<dl class="dllist">
+									<dt>报单备注:</dt>
+									<dd>{{ ruleFormStatic.flowData.apply_remark }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="12" v-if="ruleFormStatic.flowData">
+								<dl class="dllist">
+									<dt>派单备注:</dt>
+									<dd>{{ ruleFormStatic.flowData.verify_remark }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="12" v-if="ruleFormStatic.flowData">
+								<dl class="dllist">
+									<dt>施工备注:</dt>
+									<dd>{{ ruleFormStatic.flowData.work_remark }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="12" v-if="ruleFormStatic.flowData">
+								<dl class="dllist">
+									<dt>审核备注:</dt>
+									<dd>{{ ruleFormStatic.flowData.service_verify_remark }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+					</el-collapse-item>
+
+					<el-collapse-item title="派单信息" name="13" class="lefw10 wzpdt10">
+						<el-row class="mt5">
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装小组:</dt>
+									<dd>{{ ruleFormStatic.installGroupInfo.groupname}}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>安装人员:</dt>
+									<dd>{{ ruleFormStatic.installEmployee.employeename }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>车辆情况选项:</dt>
+									<dd v-if="ruleFormStatic.carstatus">{{ ruleFormStatic.carstatus?"已到":"未到" }}</dd>
+								</dl>
+							</el-col>
+							<el-col :span="8">
+								<dl class="dllist">
+									<dt>服务年限:</dt>
+									<dd v-if="ruleFormStatic.vehicleInfo.yearsofservice">{{ ruleFormStatic.vehicleInfo.yearsofservice }}年</dd>
+								</dl>
+							</el-col>
+							<el-col :span="16">
+								<dl class="dllist">
+									<dt>备注:</dt>
+									<dd>{{ ruleFormStatic.flowData.verify_remark }}</dd>
+								</dl>
+							</el-col>
+						</el-row>
+					</el-collapse-item>
+					<el-collapse-item title="车辆照片" name="14" class="enlargeArea lefw10 wzpdt10">
+						<el-row class="mt5">
+							<el-col :span="24">
+								<dl class="dllist lh55_mb10">
+									<dd>
+										<div class="imgMd mr4 mt5" v-for="(item,index) in ruleFormStatic.pictures">
+											<img :title="item.picdesc" class="image" :src="$store.state.IMG_URL+item.piclink">
+											<span>{{ item.picdesc }}</span>
+										</div>
+									</dd>
+								</dl>
+							</el-col>
+						</el-row>
+					</el-collapse-item>
+					<el-collapse-item title="设备地图实时位置" name="10086" class="enlargeArea" v-if="ruleFormStatic.installDetails && ruleFormStatic.installDetails.length>0">
+						<template slot="title">
+							<div class="fl sebei" style="margin-right:10px;">设备地图实时位置</div>
+							<el-button @click.stop="realTimeRefreshPro('vueAmap3')" :loading="realTimeRefreshLoading" size="mini"><i class="iconfont icon-shuaxin" style="padding-right: 6px;"></i>刷新</el-button>
+						</template>
+						<el-row class="mt5">
+							<el-col :span="24">
+								<gdmap3 ref="vueAmap3"></gdmap3>
+							</el-col>
+						</el-row>
+					</el-collapse-item>
+					<template v-for="(item,index) in ruleFormStatic.installDetails">
+						<el-collapse-item :title="item.packInfo.E_PRODTYPE+'设备'+item.packInfo.E_PRODMODEL" :name="(++index)+''" class="enlargeArea lefw10 wzpdt10">
+							<el-row class="mt5">
+								<el-col :span="24" v-if="item.isActive == 0">
+									<dl class="dllist">
+										<dd style="color:red;">无效设备</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>安装位置:</dt>
+										<dd>{{ item.installpositionname }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>安装时状态：</dt>
+										<dd v-if="item.onlinestatus">{{ item.onlinestatus == 0 ? "未上线" : "在线" }}</dd>
+										<dd v-else>未上线</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>设备ID:</dt>
+										<dd>{{ item.packInfo.E_PRODUNUM }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>设备类型:</dt>
+										<dd>{{ item.packInfo.E_PRODTYPE }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>设备型号:</dt>
+										<dd>{{ item.packInfo.E_PRODMODEL }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>SIM卡号:</dt>
+										<dd>{{ item.packInfo.C_PRODUNUM }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>iccid:</dt>
+										<dd>{{ item.packInfo.SIMCARDID }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>卡类型:</dt>
+										<dd>{{ item.packInfo.C_PRODMODEL }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>设备实时状态：</dt>
+										<dd v-if="item.curonlinestatus">{{ item.curonlinestatus }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="16">
+									<dl class="dllist">
+										<dt>实时位置信息：</dt>
+										<dd v-if="item.curaddress">{{ item.curaddress }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="8">
+									<dl class="dllist">
+										<dt>最后一次通讯时间：</dt>
+										<dd v-if="item.recvtime">{{ item.recvtime }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="24" v-if="item.remark">
+									<dl class="dllist">
+										<dt>设备备注:</dt>
+										<dd>{{ item.remark }}</dd>
+									</dl>
+								</el-col>
+								<el-col :span="24">
+									<dl class="dllist lh55_mb10">
+										<dd>
+											<div class="imgMd mr4 mt5" v-for="(item,index) in item.pictures">
+												<img :title="item.picdesc" class="image" :src="$store.state.IMG_URL+item.piclink">
+												<span>{{ item.picdesc }}</span>
+											</div>
+										</dd>
+									</dl>
+								</el-col>
+							</el-row>
+						</el-collapse-item>
+					</template>
+
+					<el-collapse-item title="审核信息" name="15" class="lefw10">
+						<el-form label-position="left" inline label-width="110px" class="demo-table-expand">
+							<el-form-item label="备注" prop="service_verify_remark">
+								<span>{{ ruleFormStatic.flowData.service_verify_remark }}</span>
+							</el-form-item>
+						</el-form>
+					</el-collapse-item>
+
+					<el-collapse-item title="保险操作" name="8" class="lefw10">
+						<el-form label-position="top" :model="ruleForm" ref="ruleForm" :rules="ruleFormrules" class="cur-form-inn" label-width="110px" inline>
+							<el-row :gutter="20">
+								<el-col :span="8" class="mt20">
+									<el-form-item label="保险公司" prop="insurancecorpid">
+										<el-select v-model="ruleForm.insurancecorpid" :loading="receLoading" @visible-change="insuranceCompanyList" filterable placeholder="请选择" @change="chooseInsCorp" clearable>
+											<el-option v-for="item in insuranceCompany" :key="item.corpname" :label="item.corpname" :value="item.id">
+											</el-option>
+										</el-select>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="保单编号" prop="serialnum">
+										<el-input type="text" placeholder="请输入保单编号" v-model="ruleForm.serialnum"></el-input>
+										<el-select v-if="ruleForm.insurancecorpid == 1000" v-model="ruleForm.serialnum" filterable placeholder="请选择保单编号" clearable>
+											<el-option v-for="item in serialnumList" :key="item.value" :label="item.label" :value="item.value">
+											</el-option>
+										</el-select>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="万网保单编号" prop="wwserialnum">
+										<el-input type="text" placeholder="请输入万网保单编号" v-model="ruleForm.wwserialnum"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="车主姓名" prop="owner_name">
+										<el-input type="text" placeholder="请输入车主姓名" v-model="ruleForm.owner_name"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="身份证号码" prop="owner_idcard">
+										<el-input type="text" placeholder="请输入身份证号码" v-model="ruleForm.owner_idcard"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="联系电话" prop="owner_mobile">
+										<el-input type="text" placeholder="请输入出单客户手机号" v-model="ruleForm.owner_mobile"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="联系地址" prop="owner_address">
+										<el-input type="text" placeholder="请输入联系地址" v-model="ruleForm.owner_address"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="发动机号" prop="VehicleInfo_enginenum">
+										<el-input type="text" placeholder="请输入发动机号" v-model="ruleForm.VehicleInfo_enginenum"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="车牌号" prop="VehicleInfo_licenseplatenum">
+										<el-input type="text" placeholder="请输入车牌号" v-model="ruleForm.VehicleInfo_licenseplatenum"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="厂牌型号" prop="VehicleInfo_model_number">
+										<el-input type="text" placeholder="请输入厂牌型号" v-model="ruleForm.VehicleInfo_model_number"></el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8">
+									<el-form-item label="赔偿限额" class="mt20" prop="indemnitylimit">
+										<el-input type="text" placeholder="请输入保单赔偿限额" v-model="ruleForm.indemnitylimit">
+											<template slot="append">元</template>
+										</el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="万网盗抢保障服务费" prop="price">
+										<el-input type="text" placeholder="请输入万网盗抢保障服务费" v-model="ruleForm.price">
+											<template slot="append">元</template>
+										</el-input>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="初登日期" prop="registration_date">
+										<el-date-picker type="date" placeholder="选择初登日期" v-model="ruleForm.registration_date" style="width: 100%;"></el-date-picker>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="出单日期" prop="issuedate">
+										<el-date-picker type="date" placeholder="选择出单日期" v-model="ruleForm.issuedate" style="width: 100%;" @change="issuedateChange"></el-date-picker>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8">
+									<el-form-item label="保险生效日期" class="mt20" prop="effectivedate">
+										<el-date-picker @change="effectivedateChange" type="date" placeholder="选择保险生效日期" v-model="ruleForm.effectivedate" style="width: 100%;"></el-date-picker>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8">
+									<el-form-item label="保险失效日期" class="mt20" prop="expiredate">
+										<el-date-picker type="date" placeholder="选择保险失效日期" v-model="ruleForm.expiredate" style="width: 100%;"></el-date-picker>
+									</el-form-item>
+								</el-col>
+								<el-col :span="8" class="mt20">
+									<el-form-item label="第一受益人" prop="bankname">
+										<el-autocomplete v-model="ruleForm.bankname" class="inline-input width" :fetch-suggestions="corpChangeTwoSelect" placeholder="请选择第一受益人" @select="handleSelect" value-key="corpname"></el-autocomplete>
+									</el-form-item>
+								</el-col>
+								<!-- <el-col :span="8" class="mt20">
+									<el-form-item label="报单状态" prop="insurancestatus">
+										<el-radio-group v-model="ruleForm.insurancestatus">
+											<el-radio-button label="出单">出单</el-radio-button>
+											<el-radio-button label="拒绝">拒绝</el-radio-button>
+										</el-radio-group>
+									</el-form-item>
+								</el-col> -->
+								<el-col :span="24" class="mt20">
+									<el-form-item label="备注" prop="remark">
+										<el-input type="textarea" autosize placeholder="请输入备注" v-model="ruleForm.remark"></el-input>
+									</el-form-item>
+								</el-col>
+							</el-row>
+							<el-col class="footer_but_bd" :span="24">
+								<el-button @click="$router.back(-1)" style="margin-left:5px;float:right;">返回</el-button>
+								<el-button type="primary" @click="submitForm('ruleForm',2)" style="margin-left:5px;float:right;">无保险</el-button>
+								<!-- <el-button type="primary" @click="submitForm('ruleForm')" :loading="addLoading" style="margin-left:5px;float:right;">核保</el-button> -->
+								<el-button type="primary" @click="submitForm('ruleForm',1)" :loading="addLoading" style="margin-left:5px;float:right;">出单</el-button>
+							</el-col>
+						</el-form>
+					</el-collapse-item>
+				</el-collapse>
+			</el-col>
+		</el-row>
+	</section>
+</template>
+<style scoped>
+	@import '../css/customerDeclaration.css';
+	.width.el-autocomplete{width: 100%;}
+</style>
+
+<script>
+	import async from 'async';
+	import util from '../../../common/js/util';
+	import gdmap3 from 'components/map/gdmap3';
+	
+	import { addApprovaperInsurance, getCorpNameInsuList, cldeviceIsOnstate,addInsuranceDetail,getCorpList } from '../../../api/api';
+	export default {
+		props: ['curTaskId'],
+		components: {
+			gdmap3
+		},
+		data() {
+			//自定义验证安装地址表单
+			var checkInsu = (rule, value, callback) => {
+				if(this.ruleForm[rule.field].length <= 0 && this.ruleForm.insurancestatus != '拒绝') {
+					return callback(new Error('请选择保险公司'));
+				} else {
+					callback();
+				}
+			};
+			// 验证所有电话
+			var checkAllMobile = (rule, value, callback) => {
+				var reg = /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/g,
+					flag = reg.test(value);
+				if(!flag) {
+					return callback(new Error('请输入电话号码或手机号码'));
+				} else {
+					callback();
+				}
+			};
+			//验证中文
+			var checkChinese = (rule, value, callback) => {
+				var reg = /^[\u4e00-\u9fa5]+$/g,
+					flag = reg.test(value);
+				if(!flag) {
+					return callback(new Error('只能输入中文'));
+				} else {
+					callback();
+				}
+			};
+			// 验证数字
+			var checkNum = (rule, value, callback) => {
+				var reg = /^[0-9]*$/g,
+					flag = reg.test(value);
+				if(!flag) {
+					return callback(new Error('只能输入数字'));
+				} else {
+					callback();
+				}
+			};
+			
+			return {
+				serialnumList:[{//人寿公司保单组
+				          value: '815152018440370000004',
+				          label: '815152018440370000004'
+				        }, {
+				          value: '815152018440370000006',
+				          label: '815152018440370000006'
+				        }, {
+				          value: '815152018440370000007',
+				          label: '815152018440370000007'
+				}],
+				corptwolist: [], //受理银行
+				corptwoLoading: false, //
+				indDe: 0,
+				editFormdialogActiveName:'1',
+				bxDialogVisible:false,
+				insuranceCompany: [],
+				ruleFormStatic: {
+					vehicleInfo: {
+						model: '',
+						color: '',
+						licenseplatenum: '',
+						vin: '',
+						price: '',
+						yearsofservice: '',
+						receivingbank: {
+							corpname: ''
+						}
+					},
+					corporateInfo: {},
+					insuranceInfo: {
+						insurancecorpid: ''
+					},
+					ownerInfo: {
+						name: '',
+						idcard: '',
+						mobile: ''
+					},
+					flowData: {
+						verify_result: '',
+						apply_remark: ''
+					},
+					declarEmployee: {},
+					installEmployee: {
+						employeename: ''
+					},
+					installGroupInfo: {
+						groupname: ''
+					}
+				},
+				//启动报单提交表单信息
+				ruleForm: {
+					insurancecorpid: '',
+					serialnum: '',
+					issuedate: util.formatDate.format(new Date(), 'yyyy-MM-dd'),
+					effectivedate: util.formatDate.format(new Date(), 'yyyy-MM-dd'),
+					expiredate: util.getDateThreeYers(util.addReduceDate(new Date(), -1), 3),
+					indemnitylimit: '',
+					price: '',
+					insurancestatus: '出单',
+					owner_idcard:this.$store.state.formObj.flowData.owner_idcard,
+					owner_name:this.$store.state.formObj.flowData.owner_name,
+					owner_address:this.$store.state.formObj.flowData.owner_address,
+					owner_mobile:this.$store.state.formObj.flowData.owner_mobile,
+					VehicleInfo_enginenum:this.$store.state.formObj.flowData.VehicleInfo_enginenum,
+					VehicleInfo_model_number:this.$store.state.formObj.flowData.VehicleInfo_modle,
+					VehicleInfo_licenseplatenum:this.$store.state.formObj.flowData.VehicleInfo_licenseplatenum,
+					VehicleInfo_vin:this.$store.state.formObj.flowData.VehicleInfo_vin,
+					registration_date:util.formatDate.format(new Date(), 'yyyy-MM-dd'),
+					remark: '',
+					bankname:'',
+				},
+				ruleFormrules:{
+					insurancecorpid: [{required: true,message: '请选择保险公司',trigger: 'blur'}],
+					serialnum: [{required: true,message: '请输入保单编号',trigger: 'blur'}],
+					// wwserialnum: [{required: true,message: '请输入万网保单编号',trigger: 'blur'}],
+					issuedate: [{required: true,message: '请选择出单日期',trigger: 'blur'}],
+					effectivedate: [{required: true,message: '请选择保险生效日期',trigger: 'blur'}],
+					expiredate: [{required: true,message: '请选择失效日期',trigger: 'blur'}],
+					indemnitylimit: [{required: true,message: '请输入保单赔偿限额',trigger: 'blur'},{validator: checkNum,trigger: 'blur'}],
+					price: [{required: true,message: '请输入万网盗抢保障服务费',trigger: 'blur'},{validator: checkNum,trigger: 'blur'}],
+					owner_name: [{required: true,message: '请输入车主姓名',trigger: 'blur'}],
+					owner_idcard: [{required: true,message: '请输入身份证号',trigger: 'blur'}],
+					owner_mobile: [{required: true,message: '请输入手机号',trigger: 'blur'},{validator: checkAllMobile,trigger: 'blur'}],
+					VehicleInfo_enginenum: [{required: true,message: '请输入发动机号',trigger: 'blur'}],
+					VehicleInfo_model_number: [{required: true,message: '请输入厂牌型号',trigger: 'blur'}],
+					// VehicleInfo_licenseplatenum: [{required: true,message: '请输入车牌号',trigger: 'blur'}],
+					// registration_date: [{required: true,message: '请选择初登日期',trigger: 'blur'}],
+					bankname: [{required: true,message: '请选择第一受益人',trigger: 'change'}],
+				},
+
+				//启动报单表单验证信息
+				rules: {
+					// insurancecorpid: [{
+					// 	required: true,
+					// 	validator: checkInsu,
+					// 	trigger: 'blur'
+					// }] //保险公司验证
+				},
+				activeNames: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '10086'],
+				addLoading: false,
+				realTimeRefreshLoading: false,
+				receLoading: false
+			};
+		},
+		methods: {
+			// 选择保险公司自动匹配保单编号
+			chooseInsCorp(val){
+				if (val == 10290) {//人寿
+					this.ruleForm.serialnum = '815152018440370000004';
+				}else if (val == 10346) {//人保
+					this.ruleForm.serialnum = 'PZAI201811020000000007';
+				}
+			},
+			// 银行，模糊查询
+			corpChangeTwoSelect(queryString,cb) {
+				let para = {
+					showCount: 30,
+					corptype: 'BANK',
+					corpname: queryString
+				},ownerArray = [];
+				this.corptwoLoading = true;
+				getCorpList(para).then((res) => {
+					this.corptwoLoading = false;
+					res.data.data.records.forEach(function(item, index) {
+						ownerArray.push({
+							corpid: item.id,
+							corpname: item.corpname,
+						});
+					});
+					cb(ownerArray);
+				});
+			},
+			// 选择受理银行
+			handleSelect(item) {
+				this.ruleForm.bankid = item.corpid;
+				this.ruleForm.bankname = item.corpname;
+			},
+			//改变出单日期 联动 生效日期、失效日期 
+			issuedateChange(val) {
+				this.ruleForm.effectivedate = util.addReduceDate(new Date(val), +1);//生效日期
+				var dayjian = util.addReduceDate(new Date(val),0);
+				this.ruleForm.expiredate = util.getDateThreeYers(dayjian, 3);//失效日期
+			},
+			//改变生效日期 同步 失效日期 有效期3年
+			effectivedateChange(val) {
+				var dayjian = util.addReduceDate(new Date(val), -1);
+				this.ruleForm.issuedate = dayjian;//出单日期
+				this.ruleForm.expiredate = util.getDateThreeYers(dayjian, 3);//失效日期
+			},
+			insuranceCompanyList(r) {
+				if(!r || this.insuranceCompany.length > 0) return;
+				this.receLoading = true;
+				getCorpNameInsuList().then((res) => {
+					this.insuranceCompany = res.data.data.records;
+					this.receLoading = false;
+				});
+			},
+			//实时获取设备位置 和 在线情况
+			realTimeRefreshPro(gmapname) {
+				let _this = this,
+					pro = _this.ruleFormStatic,
+					len = pro.installDetails.length;
+				if(_this.$refs[gmapname]) _this.$refs[gmapname].clearMap();
+				if(len > 0) {
+					let i = _this.indDe,
+						para = {
+							id: pro.installDetails[i].packInfo.E_PRODUNUM
+						};
+					_this.realTimeRefreshLoading = true;
+					async.waterfall([
+						function(callback) {
+							cldeviceIsOnstate(para).then((res) => {
+								let data = res.data.data.realdata;
+								callback(null, data);
+							});
+
+						},
+						function(data, callback) {
+							if(data) {
+								if(data.lng == 0 || data.lat == 0) {
+									_this.ruleFormStatic.installDetails[i].curaddress = "无定位";
+									callback(null, data);
+								} else {
+									_this.$refs[gmapname].getAddress([data.lng, data.lat], para.id, (res) => {
+										_this.ruleFormStatic.installDetails[i].curaddress = res;
+										callback(null, data);
+									});
+								}
+							} else {
+								_this.ruleFormStatic.installDetails[i].curaddress = "无定位";
+								callback(null, data);
+							}
+						},
+					], function(err, data) {
+						if(data) {
+							switch(data.istate) {
+								case 0:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "行驶";
+									break;
+								case 1:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "离线";
+									break;
+								case 2:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "停车";
+									break;
+								case 3:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "报警";
+									break;
+								case 4:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "无效定位";
+									break;
+								case 5:
+									_this.ruleFormStatic.installDetails[i].curonlinestatus = "未定位";
+									break;
+							}
+							_this.ruleFormStatic.installDetails[i].recvtime = data.recvtime;
+						} else {
+							_this.ruleFormStatic.installDetails[i].curaddress = "无定位";
+							_this.ruleFormStatic.installDetails[i].curonlinestatus = "未在线";
+						}
+						_this.realTimeRefreshLoading = false;
+						_this.indDe++;
+						if(_this.indDe < len) _this.realTimeRefreshPro(gmapname);
+						if(_this.indDe == len) _this.indDe = 0;
+					});
+				}
+			},
+			/* 提交表单数据 */
+			submitForm(formName,type) {
+				if (type == 2) {//无保险操作
+					let addformpara = {
+							taskId: this.curTaskId,
+							properties: {
+								insurancestatus: '无保险',
+								insuranceInfo: {
+									insurancestatus: '无保险',
+									declaration_id:this.ruleFormStatic.id
+								}
+							},
+					}
+					this.addLoading = true;
+					//提交审核结果
+					addInsuranceDetail(addformpara).then((res) => {
+						this.addLoading = false;
+						if(res.data.result.code == 0) {
+							this.$message({
+								message: addformpara.properties.insurancestatus == '无保险' ? '处理成功！' : '出单成功',
+								type: 'success'
+							});
+							//初始化待办数量
+							this.$store.dispatch('initFormNum');
+							if(!this.$store.state.formObj) {
+								this.getHdTodo();
+							} else {
+								this.$router.back(-1);
+							}
+						}
+					});
+					return;
+				}
+				if(!this.ruleForm.insurancecorpid && type == 1){
+					this.$message({
+						message: '请选择保险公司！',
+						type: 'warning'
+					});
+					return;
+				}
+				//出单操作
+				this.$refs[formName].validate((valid) => {
+					if(valid) {
+						let addformpara = {
+							taskId: this.curTaskId,
+							properties: {
+								insurancestatus: type == 1?'出单':'无保险',
+								insuranceInfo: {
+									serialnum: this.ruleForm.serialnum,
+									wwserialnum:this.ruleForm.wwserialnum,
+									insurancecorpid: this.ruleForm.insurancecorpid,
+									price: this.ruleForm.price,
+									issuedate: util.formatDate.format(new Date(this.ruleForm.issuedate), 'yyyy-MM-dd'),
+									registration_date:this.ruleForm.registration_date == null ? '' : util.formatDate.format(new Date(this.ruleForm.registration_date), 'yyyy-MM-dd'),
+									effectivedate: util.formatDate.format(new Date(this.ruleForm.effectivedate), 'yyyy-MM-dd'),
+									expiredate: util.formatDate.format(new Date(this.ruleForm.expiredate), 'yyyy-MM-dd'),
+									indemnitylimit: this.ruleForm.indemnitylimit,
+									price:this.ruleForm.price,
+									owner_idcard:this.ruleForm.owner_idcard,
+									owner_name:this.ruleForm.owner_name,
+									owner_address:this.ruleForm.owner_address,
+									owner_mobile:this.ruleForm.owner_mobile,
+									VehicleInfo_enginenum:this.ruleForm.VehicleInfo_enginenum,
+									VehicleInfo_model_number:this.ruleForm.VehicleInfo_model_number,
+									VehicleInfo_licenseplatenum:this.ruleForm.VehicleInfo_licenseplatenum,
+									bankid:this.ruleForm.bankname,
+									declaration_id:this.ruleFormStatic.id
+								},
+								result: true,
+								remark: this.ruleForm.remark
+							}
+						};
+						this.addLoading = true;
+						if(this.$store.state.formObj.type == 5){
+							//提交审核结果
+							addInsuranceDetail(addformpara).then((res) => {
+								this.addLoading = false;
+								if(res.data.result.code == 0) {
+									this.$message({
+										message: addformpara.properties.insurancestatus == '无保险' ? '处理成功！' : '出单成功',
+										type: 'success'
+									});
+									//初始化待办数量
+									this.$store.dispatch('initFormNum');
+									if(!this.$store.state.formObj) {
+										this.getHdTodo();
+									} else {
+										this.$router.back(-1);
+									}
+								}
+							});
+						}else{
+							//提交审核结果
+							addApprovaperInsurance(addformpara).then((res) => {
+								this.addLoading = false;
+								if(res.data.result.code == 0) {
+									this.$message({
+										message: '出单成功！',
+										type: 'success'
+									});
+									//初始化待办数量
+									this.$store.dispatch('initFormNum');
+									if(!this.$store.state.formObj) {
+										this.getHdTodo();
+									} else {
+										this.$router.back(-1);
+									}
+								}
+							});
+						}
+					}
+				});
+			},
+			getCustoHistoryInfo(res, row) {
+				this.$nextTick(function(){
+					//初始化图片查看器
+		                $("div.rpShowimgDialog").on("click",".image",function(e){
+		                    $("div.rpShowimgDialog").viewer("destroy");
+		                    $("div.rpShowimgDialog").viewer({zIndex:999999999});
+		                });
+				});
+				let dayjia = util.addReduceDate(new Date(res.installactualdate), 1);
+				this.ruleFormStatic = res;
+				this.ruleForm.serialnum = res.flowData.serialnum;
+				this.ruleForm.wwserialnum = res.flowData.wwserialnum;
+				this.ruleForm.indemnitylimit = res.flowData.indemnitylimit;
+				this.ruleForm.price = res.flowData.price;
+				this.ruleForm.owner_idcard = res.flowData.owner_idcard;
+				this.ruleForm.owner_name = res.flowData.owner_name;
+				this.ruleForm.owner_address = res.flowData.owner_address;
+				this.ruleForm.owner_mobile = res.flowData.owner_mobile;
+				this.ruleForm.VehicleInfo_enginenum = res.flowData.VehicleInfo_enginenum;
+				this.ruleForm.VehicleInfo_model_number = res.flowData.VehicleInfo_model_number;
+				this.ruleForm.VehicleInfo_licenseplatenum = res.flowData.VehicleInfo_licenseplatenum;
+				this.ruleForm.registration_date = util.formatDate.format(res.flowData.registration_date,'yyyy-MM-dd');
+				this.ruleForm.effectivedate = util.formatDate.format(dayjia, 'yyyy-MM-dd');
+				this.ruleForm.expiredate = util.getDateThreeYers(new Date(res.installactualdate), 3);
+				this.realTimeRefreshPro('vueAmap3');
+			},
+			/* 重置表单数据 */
+			resetForm(formName) {
+				this.ruleForm = { //启动报单提交表单信息
+				};
+			}
+		},
+		/*初始化页面数据*/
+		created() {
+			this.$emit("changeStep", 4);
+			//判断是否单条处理
+			this.$emit("getFormData", this.$store.state.formObj);
+		}
+	}
+</script>

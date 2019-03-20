@@ -1,0 +1,766 @@
+<template>
+    <el-row class="container" :style="{backgroundColor:customTheme.contentColor}">
+        <el-col :span="24" class="header" :style="{backgroundColor:customTheme.headerColor}">
+            <div class="navbar-header" :style="{backgroundColor:nomenu == 3?customTheme.logoBackColor:customTheme.logoBackColor1}">
+                <i class="logo"></i>
+                <img src="../assets/images/logo_text.png" />
+            </div>
+            <el-col :span="24" class="userinfo">
+                <ul class="tools" >
+                    <li @click.prevent="collapse" v-if="nomenu == 3">
+                        <i v-if="isCollapse" class="el-icon-d-arrow-left scale" title="收起" style="font-size:2rem;"></i>
+                        <i v-else class="el-icon-d-arrow-right scale" title="展开" style="font-size:2rem;"></i>
+                    </li>
+                    <li title="警告" v-if="nomenu != 1" :style="{borderLeft:nomenu != 3?'1px solid rgba(0, 0, 0, 0.05)':'none'}"><el-badge class="shortcut" :value="$store.getters.amountNum"><i class="el-icon-bell rotateBell" plain @click.prevent="open"></i></el-badge> </li>
+                    <li @click.prevent="setTheme" title="设置" v-if="nomenu != 1"><i class="el-icon-setting rotate" aria-hidden="true"></i> </li>
+                    <li v-if="nomenu != 1" @click.prevent="$router.push('/personnelDesk')" :style="{borderLeft:nomenu != 3?'1px solid rgba(0, 0, 0, 0.05)':'none'}" title="工作台"><i class="iconfont icon-gongzuotai scale" aria-hidden="true"></i> </li>
+                </ul>
+                <ul class="rightTools">
+                    <li class="home_weather">
+                        <div class="countdown-alt-1">
+                            <span class="item item-hh">
+                                <span class="hh-1">{{hh_1}}</span>
+                                <span class="hh-2">{{hh_2}}</span>
+                            </span>
+                            <span class="separator">:</span>
+                            <span class="item item-mm">
+                                <span class="mm-1">{{mm_1}}</span>
+                                <span class="mm-2">{{mm_2}}</span>
+                            </span>
+                            <span class="separator">:</span>
+                            <span class="item item-ss">
+                                <span class="ss-1">{{ss_1}}</span>
+                                <span class="ss-2">{{ss_2}}</span>
+                            </span>
+                        </div>
+                    </li>
+                    <li>
+                        <el-dropdown trigger="click">
+                            <span class="el-dropdown-link userinfo-inner" :id="sysUserid">
+                                <template v-if="sysUserAvatar == 'default'">
+                                    <img src="../assets/images/pho.png" :title="sysUserName"/> </template>
+                                    <template v-else>
+                                        <img :src="sysUserAvatar" :title="sysUserName"/>
+                                    </template>
+                                    <i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item @click="myInfo">个人信息</el-dropdown-item>
+                                    <el-dropdown-item @click.native="downedmanal">操作手册</el-dropdown-item>
+                                    <el-dropdown-item @click.native="editPsw">修改密码</el-dropdown-item>
+                                    <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </li>
+                        <li>
+                            <div class="fullpage"><i :title="this.fullScreenTitle" @click.prevent="fullScreen" :class="this.fullScreenClass"></i></div>
+                        </li>
+                    </ul>
+                </el-col>
+            </el-col>
+
+            <el-col :span="24" class="main zdyMenu">
+                <aside class="menu-expanded" id="treeMenu" v-if="nomenu == 3" :style="{backgroundColor:customTheme.navColor1}">
+                    <!--导航菜单-展开-->
+                    <el-menu :default-active="$route.meta.routerIndex+''" class="el-menu-vertical-demo" @open="openMenu" @close="closeMenu" :default-openeds='defaultOpeneds' unique-opened :style="{backgroundColor:customTheme.navColor}">
+                        <template v-for="(item,ind) in routers" v-if="item.hidden != 1 && item.system == 'A'">
+                            <template v-if="item.children.length == 0 && item.parentid == 0">
+                                <el-menu-item :index="item.id+''" @click.native="$router.push(item.path)">
+                                    <i :class="item.iconCls" ></i>
+                                    <span>{{ item.name }}</span>
+                                </el-menu-item> 
+                            </template>
+                            <template v-else>
+                                <el-submenu :index="item.id+''">
+                                    <template slot="title">
+                                        <i :class="item.iconCls"></i>
+                                        <span v-if="item.name != '业务管理' || $store.getters.amountNum == 0">{{item.name}}</span>
+                                        <el-badge v-if="item.name == '业务管理' && $store.getters.amountNum != 0" is-dot class="item">{{item.name}}</el-badge>
+                                    </template>
+                                    <template v-for="(child,ind) in item.children">
+                                        <template v-if="child.children.length == 0 || !child.name">
+                                            <el-menu-item :index="child.id+''" v-if="child.hidden != 1" @click.native="$router.push(child.path)" :style="{backgroundColor:customTheme.navColor1}">
+                                                <span v-if="child.name != '我的待办' || $store.getters.amountNum == 0">{{ child.name }}</span>
+                                                <el-badge v-if="child.name == '我的待办' && $store.getters.amountNum != 0" :value="$store.getters.amountNum" :max="2299" class="item">{{ child.name }}</el-badge>
+                                            </el-menu-item>
+                                        </template>
+                                        <template v-else>
+                                            <el-submenu :index="child.id+''" class="pd45">
+                                                <template slot="title"><i :class="child.iconCls"></i>{{child.name}}</template>
+                                                <el-menu-item v-for="child in child.children" :index="child.id+''" @click.native="$router.push(child.path)" v-if="child.hidden != 1"><span>{{ child.name }}</span>
+                                                </el-menu-item>
+                                            </el-submenu>
+                                        </template>
+                                    </template>
+                                </el-submenu>
+                            </template>
+                        </template>
+                    </el-menu>
+                    <div class="versie">
+                        <span>VAS v2.7.2.5 测试版</span>
+                    </div>
+                </aside>
+
+                <aside class="menu-collapsed" v-if="nomenu == 3" :style="{backgroundColor:customTheme.navColor1}">
+                    <!--导航菜单-折叠后-->
+                    <ul class="el-menu el-menu-vertical-demo collapsed" :style="{backgroundColor:customTheme.navColor}">
+                        <li v-for="(item,ind) in routers" v-if="item.hidden != 1 && item.system == 'A'" class="el-submenu item">
+                            <template v-if="item.children.length == 0 && item.parentid == 0">
+                                <div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;" :title="item.name" :class="$route.path == item.path?'is-active':''" @click="$router.push(item.path)">
+                                    <i :class="item.iconCls"></i>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="el-submenu__title" style="padding-left: 20px;" :title="item.name">
+                                    <i v-if="item.name != '业务管理' || $store.getters.amountNum == 0" :class="item.iconCls"></i>
+                                    <el-badge v-if="item.name == '业务管理' && $store.getters.amountNum != 0" is-dot class="item">
+                                        <i :class="item.iconCls"></i>
+                                    </el-badge>
+                                </div>
+                                <ul class="el-menu submenu" :class="'submenu-hook-'+ind" :style="{backgroundColor:customTheme.navColor1}"> 
+                                    <template v-for="(child,ind) in item.children">
+                                        <template v-if="child.children.length == 0 || !child.name">
+                                            <li v-if="child.hidden != 1" class="el-menu-item" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">
+                                                <span v-if="child.name != '我的待办' || $store.getters.amountNum == 0">{{ child.name }}</span>
+                                                <el-badge v-if="child.name == '我的待办' && $store.getters.amountNum != 0" :value="$store.getters.amountNum" :max="2299" class="item">{{ child.name }}</el-badge>
+                                            </li>
+                                        </template>
+                                        <template v-else>
+                                            <li v-if="child.hidden != 1" class="el-menu-item">
+                                                <span>{{ child.name }}</span>
+                                                <ul class="el-menu submenu" :class="'submenu-hook-'+(ind*100)">
+                                                    <li v-for="child in child.children" v-if="child.hidden != 1" class="el-menu-item" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">
+                                                        <span>{{ child.name }}</span>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </template>
+                                    </template>
+                                </ul>
+                            </template>
+                        </li>
+                    </ul>
+                </aside>
+                <!-- 中部 面包屑 -->
+                <section class="content-container">
+                    <el-col :span="24" class="content-wrapper">
+                        <transition name="el-zoom-in-center">
+                            <keep-alive :include="dynamicRouting">
+                                <router-view 
+                                    ref="homeChildInfo"
+                                    :windowOutHeight="windowOutHeight" 
+                                    :weather='weather'
+                                    :message='message'>
+                                </router-view>
+                            </keep-alive>
+                        </transition>
+                    </el-col>
+                </section>
+                <!-- tab切换 右下角 -->
+                <div class="tabBotRight" >
+                <el-tooltip class="item" v-for="item in $store.state.paths" placement="top">
+                    <div slot="content" class="tipcfixed">{{ item.name }}<i class="iconfont icon-msnui-close" @click="closetab(item.path)" title="关闭tab页记录"></i></div>
+                    <template v-if="item.path == $store.state.curpath.path">
+                        <el-button class="on" @click="tablinkcat(item.path)"></el-button>
+                    </template>
+                    <template v-else>
+                        <el-button @click="tablinkcat(item.path)"></el-button>
+                    </template>
+                </el-tooltip>
+            </div>
+        </el-col>
+
+        <!-- 主题修改弹窗 start-->
+        <el-dialog title="主题设置" :visible.sync="dialogVisible" class="setThemeDialog" width="30%">
+            <ul>
+                <li>
+                    <span class="title">导航树背景色</span>
+                    <a href="javascript:void(0)" class="demo-theme demo-a-light add-tooltip" title="导航树背景色">
+                        <div class="demo-theme-head"></div>
+                        <div class="demo-theme-nav" :style="{backgroundColor:customTheme.navColor}"></div>
+                    </a>
+                    <el-color-picker @change="changetheme(customTheme.navColor,1)" v-model="customTheme.navColor" show-alpha></el-color-picker>
+                </li>
+                <li>
+                    <span class="title">左上角背景色</span>
+                    <a href="javascript:void(0)" class="demo-theme demo-a-light add-tooltip" title="导航树背景色">
+                        <div class="demo-theme-brand" :style="{backgroundColor:customTheme.logoBackColor}"></div>
+                        <div class="demo-theme-head"></div>
+                        <div class="demo-theme-nav"></div>
+                    </a>
+                    <el-color-picker @change="changetheme(customTheme.logoBackColor,4)" v-model="customTheme.logoBackColor" show-alpha></el-color-picker>
+                </li>
+                <li>
+                    <span class="title">头部背景色</span>
+                    <a href="javascript:void(0)" class="demo-theme demo-a-light add-tooltip" title="导航树背景色">
+                        <div class="demo-theme-head" :style="{backgroundColor:customTheme.headerColor}"></div>
+                        <div class="demo-theme-nav"></div>
+                    </a>
+                    <el-color-picker @change="changetheme(customTheme.headerColor,2)" v-model="customTheme.headerColor" show-alpha></el-color-picker>
+                </li>
+                <li>
+                    <span class="title">内容区域背景色</span>
+                    <a href="javascript:void(0)" class="demo-theme demo-a-light add-tooltip" title="导航树背景色">
+                        <div class="demo-theme-brand"></div>
+                        <div class="demo-theme-head"></div>
+                        <div class="demo-theme-nav"></div>
+                        <div class="demo-theme-content" :style="{backgroundColor:customTheme.contentColor}"></div>
+                    </a>
+                    <el-color-picker @change="changetheme(customTheme.contentColor,3)" v-model="customTheme.contentColor" show-alpha></el-color-picker>
+                </li>
+            </ul>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="resetTheme">重新初始化主题</el-button>
+            </div>
+        </el-dialog>
+        <!-- 主题修改弹窗 end-->
+
+        <!-- 修改用户密码 start-->
+        <el-dialog title="修改密码" :visible.sync="editPswDialogVisible" class="setThemeDialogs" width="30%">
+            <el-form label-position="left" label-width="80px" :model="pswForm" ref="pswForm" :rules="rules">
+                <el-form-item label="原密码" prop="oldPassword">
+                    <el-input v-model="pswForm.oldPassword" placeholder="请输入原密码"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop="newPassword">
+                    <el-input v-model="pswForm.newPassword" placeholder="请输入新密码"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="comfirPassword">
+                    <el-input v-model="pswForm.comfirPassword" placeholder="请输入确认密码"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editPswDialogVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="editPswSubmit('pswForm')" :loading="editPswLoading">提交</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改用户密码 end-->
+
+
+        <!-- 我的IM start-->
+        <div v-if="nomenu != 1 && isChartApp">
+            <onlineChat @openChat="openChat"></onlineChat> <!-- 聊天图标——打开对话框/联系人列表-->
+            <contactsList v-show="chatListVisible" @closechat="closeWin"></contactsList>联系人列表
+        </div>
+        <!-- 我的IM end-->
+    </el-row>
+</template>
+<style scoped>
+    .container{position: absolute;top: 0px;bottom: 0px;width: 100%;background: whitesmoke;}
+    .container .main {display: flex;display: -webkit-flex;position: absolute;top: 60px;bottom: 0;overflow: hidden;}
+    .container .main .content-container {flex:1;overflow: auto;position: relative;}
+</style>
+<script>
+    import '../assets/js/jquery.fullscreen';
+    import '../../static/js/jquery.nicescroll';
+    import '../../static/js/viewer-jquery.min';
+    import ContactsList from 'components/chat/contactsList';
+    import OnlineChat from 'components/chat/onlineChat';
+    import { editPassword,logout,getFormCount,limitlinedigit,findipgetcity} from '../api/api';
+    export default {
+        props:['windowOutHeight'],
+        components:{ OnlineChat,ContactsList },
+        data() {
+            return { 
+                weather:'',
+                //登录识别码
+                nomenu:0,
+                showRouter:true,
+                isChartApp:false,
+                chatListVisible:false,
+                message:"",
+                editPswLoading:false,
+                defaultActive:"1",
+                editPswDialogVisible:false,
+                sysUserName: '',
+                sysUserid:'',
+                sysUserAvatar: 'http://m.qqju.com/pic/tx/tx5511.jpg',
+                fullScreenClass:"iconfont icon-quanping1",//全屏模式icon
+                fullScreenTitle:"全屏模式",//标题
+                dialogVisible:false,
+                routers:[],
+                dynamicRouting:[],
+                defaultOpeneds:[],
+                customTheme:{//自定义主题色
+                    headerColor:"#373d41",
+                    contentColor:'#eaedf1',
+                    logoBackColor:'#373d41',
+                    logoBackColor1:'#373d41',
+                    navColor:'#42485b',
+                    navColor1:'#333744'
+                },
+                router:[],
+                isCollapse:true,
+                pswForm:{
+                    oldPassword:'',
+                    newPassword:'',
+                    comfirPassword:''
+                },
+                rules:{
+                    oldPassword:[{required:true,message:"请输入原密码",trigger: 'blur'}],
+                    newPassword:[{required:true,message:"请输入新密码",trigger: 'blur'}],
+                    comfirPassword:[{required:true,message:"请输入确认密码",trigger: 'blur'}]
+                },
+                user:'',
+                form: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+                },
+                hh_1:0,
+                hh_2:0,
+                mm_1:0,
+                mm_2:0,
+                ss_2:0,
+                ss_1:0
+            }
+        },
+        methods: { 
+            // 关闭聊天列表窗口
+            closeWin(){
+                this.chatListVisible = false;
+            },
+            // 打开聊天列表窗口
+            openChat(){
+                this.chatListVisible = true;//联系人列表
+            },
+            //webworkers方法
+            startWorker(){
+                let w;
+                if(typeof(Worker) !== "undefined"){//当浏览器支持webworkers时
+                    if(typeof(w) == "undefined") {
+                        w = new Worker("/static/js/webworkers.js");
+                    }
+                    w.onmessage = (event) => {
+                        this.updateTime();
+                    }
+                }else{//当浏览器不支持webworkers时
+                    console.log('当前浏览器不支持webworkers！')
+                }
+            },
+            updateTime() {
+                let cd = new Date();
+                this.hh_1 = this.zeroPadding(cd.getHours(), 2).split('')[0];
+                this.hh_2 = this.zeroPadding(cd.getHours(), 2).split('')[1];
+                this.mm_1 = this.zeroPadding(cd.getMinutes(), 2).split('')[0];
+                this.mm_2 = this.zeroPadding(cd.getMinutes(), 2).split('')[1];
+                this.ss_1 = this.zeroPadding(cd.getSeconds(), 2).split('')[0];
+                this.ss_2 = this.zeroPadding(cd.getSeconds(), 2).split('')[1];
+            },
+            zeroPadding(num, digit) {
+                var zero = '';
+                for(var i = 0; i < digit; i++) {
+                    zero += '0';
+                }
+                return (zero + num).slice(-digit);
+            },
+            /**发送消息**/
+            sendPeerMessage(){
+            },
+            resetTheme(){
+                this.customTheme = {
+                    headerColor:"#373d41",
+                    contentColor:'#eaedf1',
+                    logoBackColor:'#373d41',
+                    logoBackColor1:'#373d41',
+                    navColor:'#42485b',
+                    navColor1:'#333744'
+                }
+                localStorage.setItem("vastheme",JSON.stringify(this.customTheme));
+            },
+              //获取当前城市的限行尾数
+              daylimitlinedigit(cityname){ 
+                  let pm = {
+                      cityname:cityname
+                  }; 
+                  limitlinedigit(pm).then((result) => {
+                      var val = result.data.data;
+                      if(val!=null){
+                          this.message = val.number.split('和').join('-');
+                      }
+                  });  
+              },             
+              openMenu(){
+                  setTimeout(function(){
+                      $('aside#treeMenu').niceScroll().resize();
+                  },600);
+              },
+            //折叠菜单初始化滚动条
+            closeMenu(){
+                setTimeout(function(){
+                    $('aside#treeMenu').niceScroll().resize();
+                },600);
+            },
+            downedmanal(){
+                window.open('/apk/czsc/E车宝产品操作文档.html', "_blank");
+            },
+            editPsw(){
+                this.editPswDialogVisible = true;
+            },
+            editPswSubmit(formName){
+                if(this.pswForm.newPassword != this.pswForm.comfirPassword){
+                    this.$message({
+                        message: '两次密码输入的不一样！',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                this.$refs[formName].validate((valid) => {
+                    if (valid) 
+                    {
+                        let para = {
+                            id:this.user.id,
+                            pwd:this.pswForm.oldPassword,
+                            new_pwd:this.pswForm.newPassword
+                        }
+                        this.editPswLoading = true;
+                        editPassword(para).then((res) => {
+                            this.editPswLoading = false;
+                            if(!res.data.data && res.data.result.code == 9999){
+                                this.$message({
+                                    message: res.data.result.desc,
+                                    type: 'warning'
+                                });
+                                return;
+                            }
+                            this.$message({
+                                message: '修改密码成功！',
+                                type: 'success'
+                            });
+                            this.editPswDialogVisible = false;
+                            sessionStorage.removeItem('user');
+                            location.href = "login.html";
+                            this.$refs[formName].resetFields();
+                        });
+                    } 
+                    else 
+                    {
+                        return false;
+                    }
+                });
+            },
+            
+            open() {
+                this.$router.push("/formMain");
+            },
+            tablinkcat(path){
+                this.$router.push(path);
+            },
+            /**
+            *框架自定义各模块色彩
+            *c 当前色彩
+            *t 当前模块自定义类型对应id
+            **/
+            changetheme(c,t){
+                if(t == 2) this.customTheme.logoBackColor1 = c;
+                localStorage.setItem("vastheme",JSON.stringify(this.customTheme));
+            },
+            //皮肤选择
+            setTheme(){
+                this.dialogVisible = true;
+            },
+            //查询按钮切换操作
+            searchcat(e){
+                var pthis = $(e.target).parent();
+                if(pthis.hasClass("close")){
+                    pthis.removeClass("close");
+                }else{
+                    pthis.addClass("close");
+                }
+            },
+            //删除tab页记录
+            closetab(path){
+                this.$store.state.paths.forEach((obj,i)=>{
+                    if(obj.path == path){
+                        this.$store.state.paths.splice(i,1);
+                    }
+                });
+            },
+            // 个人信息
+            myInfo: function(){
+                location.href = "myInfo.html";
+            },
+            //退出登录
+            logout() {
+                var _this = this;
+                this.$confirm('确认退出吗?', '提示', {
+                }).then(() => {
+                    logout().then((res) => {});
+                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('noMenu');
+                    location.href = "login.html";
+                }).catch(() => {
+                });
+            },
+            //折叠导航栏
+            collapse(){
+                this.isCollapse = $("#treeMenu").hasClass("w220");
+                if(this.isCollapse){
+                    $("aside.menu-collapsed,aside#treeMenu").removeClass("w220");
+                    $("div.navbar-header").removeClass("navbaron");
+                }else{
+                    $("aside.menu-collapsed,aside#treeMenu").addClass("w220");
+                    $("div.navbar-header").addClass("navbaron");
+                }
+                if(!this.$refs.homeChildInfo.chartColumn) return;
+                /*重置图表宽高*/
+                this.$refs.homeChildInfo.chartColumn.resize();
+                this.$refs.homeChildInfo.chartPie.resize();
+            },
+
+            // 判断各种浏览器，找到正确的方法
+            launchFullscreen(element) {
+                if(element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if(element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if(element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if(element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            },
+            // 判断浏览器种类
+            exitFullscreen(){
+                if(document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if(document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if(document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            },
+            /*点击全屏展现 同时改变按钮状态*/
+            fullScreen(e){
+                if($(event.target).hasClass("iconfont icon-quanping1"))
+                {
+                    this.fullScreenClass = "iconfont icon-suoxiao";
+                    this.fullScreenTitle = "正常模式";
+                    this.launchFullscreen(document.documentElement); // 整个网页
+                }
+                else{
+                    this.fullScreenClass = "iconfont icon-quanping1";
+                    this.fullScreenTitle = "全屏模式";
+                    this.exitFullscreen();
+                }
+            },
+            //根据ip获取地址 根据地址获取天气
+            findipgetcity(){
+                findipgetcity().then((result) => {
+                    var json = eval('(' + result.data.data.split('=')[1] + ')');//讲字符串解析为json对象
+                    $.ajax({
+                        // url:"http://api.map.baidu.com/telematics/v3/weather",//百度api
+                        // data:{//百度api传参
+                        //     location:json.city,
+                        //     output:'json',
+                        //     ak:'6tYzTvGZSOpYB5Oc2YGGOKt8'
+                        // },
+                        url:'http://restapi.amap.com/v3/weather/weatherInfo',
+                        type:"get",
+                        data:{
+                            city:json.city,
+                            key:'84b7a0a070751d43e32b43a1738a8fbd'
+                        },
+                        dataType:"jsonp",/*预期服务器端返回的数据类型，假设我现在跨域了，我就改成jsonp 就可以了 */
+                        success:(data)=>{
+                            this.weather = data.lives[0];
+                        }
+                    });
+                    this.daylimitlinedigit(json.city.slice(0,json.city.length-1));//去掉‘市’字 ，获取限行                  
+                });
+                return this;
+            },
+            /** 初始化首页主题 start*/
+            initVasTheme(){
+                let vastheme = JSON.parse(localStorage.getItem("vastheme"));
+                if(vastheme){
+                    this.customTheme = vastheme;
+                }
+                return this;
+            },
+            //初始化监控全屏f11
+            fullscreenF11(){
+                let _this = this;
+                $(document).on('keydown', function (e) {
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                     if(e && e.keyCode == 122){//捕捉F11键盘动作
+                       e.preventDefault();  //阻止F11默认动作
+                       var el = document.documentElement;
+                       //定义不同浏览器的全屏API
+                       var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
+                　　　 //执行全屏
+                if (typeof rfs != "undefined" && rfs) {
+                    rfs.call(el);
+                } else if(typeof window.ActiveXObject != "undefined"){
+                    var wscript = new ActiveXObject("WScript.Shell");
+                    if (wscript!=null) {
+                        wscript.SendKeys("{F11}");
+                    }
+                }
+                　　　//监听不同浏览器的全屏事件，并件执行相应的代码
+                       document.addEventListener("webkitfullscreenchange", function() {//
+                           if (document.webkitIsFullScreen) {
+                                //全屏后要执行的代码
+                                _this.fullScreenClass = "iconfont icon-suoxiao";
+                                _this.fullScreenTitle = "正常模式";
+                            }else{
+                                //退出全屏后执行的代码
+                                _this.fullScreenClass = "iconfont icon-quanping1";
+                                _this.fullScreenTitle = "全屏模式";
+                            　　}
+                        }, false);
+
+                       document.addEventListener("fullscreenchange", function() {
+                           if (document.fullscreen) {
+                                //全屏后执行的代码
+                                _this.fullScreenClass = "iconfont icon-suoxiao";
+                                _this.fullScreenTitle = "正常模式";
+                            }else{
+                                //退出全屏后要执行的代码
+                                _this.fullScreenClass = "iconfont icon-quanping1";
+                                _this.fullScreenTitle = "全屏模式";
+                            }
+                        }, false);
+
+                       document.addEventListener("mozfullscreenchange", function() {
+                           if (document.mozFullScreen) {
+                                //全屏后要执行的代码
+                                _this.fullScreenClass = "iconfont icon-suoxiao";
+                                _this.fullScreenTitle = "正常模式";
+                            }else{
+                                //退出全屏后要执行的代码
+                                _this.fullScreenClass = "iconfont icon-quanping1";
+                                _this.fullScreenTitle = "全屏模式";
+                            }
+                        }, false);
+
+                       document.addEventListener("msfullscreenchange", function() {
+                           if (document.msFullscreenElement) {
+                                //全屏后要执行的代码
+                            }else{
+                                //退出全屏后要执行的代码
+                                _this.fullScreenClass = "iconfont icon-quanping1";
+                                _this.fullScreenTitle = "全屏模式";
+                            }
+                        }, false);
+                   }
+                });
+                return _this;
+            },
+            /** 刷新默认展开菜单*/
+            reloadRouteMenu(){
+                let temparr =[];
+                this.$route.matched.forEach((res,index)=>{         
+                    temparr.push(res.meta.routerIndex);
+                });
+                temparr.pop();
+                this.defaultOpeneds = temparr;
+                return this;
+            },
+            initUserAVatar(){
+                if (this.user) {
+                    this.sysUserName = this.user.employeeInfo.employeename;
+                    this.sysUserid = this.user.employeeInfo.id;
+                    if(this.user.employeeInfo.headiconpath != undefined || this.user.employeeInfo.headiconpath != null){
+                        this.sysUserAvatar = this.$store.state.IMG_URL+this.user.employeeInfo.headiconpath;
+                    }else{
+                        this.sysUserAvatar = "default";
+                    }
+                }
+                return this;
+            },
+            /*登录成功首页提示用户当前用户信息 start*/
+            isPromptLoadTIP(){
+                let isPrompt = sessionStorage.getItem('isPrompt');
+                if(isPrompt == 1){
+                    this.$notify.success({
+                        title: '系统提示',
+                        message: (<div>{this.user.employeeInfo.employeename}，<span id="h_lduui"></span>好！欢迎使用VAS信息管理系统！</div>),
+                        offset: 50,
+                        duration:5000
+                    });
+                    sessionStorage.setItem('isPrompt', 2);
+                }
+                return this;
+            },
+            sumenuHover(){
+                /** vas折叠后的导航栏 鼠标移动显示 事件 start*/
+                $("div.main").on("mouseover","ul.collapsed li.el-submenu,ul.collapsed li.el-submenu>ul>li.el-menu-item",function(e){
+                    $(this).children("ul.submenu").show();
+                }).on("mouseleave ","ul.collapsed li.el-submenu,ul.collapsed li.el-submenu>ul>li.el-menu-item",function(e){
+                    $(this).children("ul.submenu").hide();
+                });
+                /** vas折叠后的导航栏 end*/
+                return this;
+            },
+            //菜单滚动条初始化
+            initNiceScroll(){
+                //菜单滚动条初始化
+                $('aside#treeMenu').niceScroll({
+                    zindex:2,
+                    cursordragontouch: true,
+                    touchbehavior:true,
+                    cursorcolor: "#878d99",//#CC0071 光标颜色
+                    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+                    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+                    cursorwidth: "4px", //像素光标的宽度
+                    cursorborder: "0", //     游标边框css定义
+                    cursorborderradius: "6px",//以像素为光标边界半径
+                    autohidemode: true //是否隐藏滚动条
+                });
+                return this;
+            },
+            //需要缓存的路由配置
+            dynamicRoutingConfig(){
+                //需要缓存的组件name
+                this.dynamicRouting = [
+                    'CorporateInfo',
+                    'ProductInfo',
+                    'DeliveryAddress',
+                    'DepartmentInfo',
+                    'EmployeeInfo',
+                    'GroupInfo',
+                    'InsuranceInfo',
+                    'OwnerInfo',
+                    'PositionInfo',
+                    'SIMInfo',
+                    'StorageInfo',
+                    'VehicleInfo',
+                    'VehicleType'
+                ];
+            }
+        },
+        created(){
+            //初始化待办数量
+            this.$store.dispatch('initFormNum');
+            //初始化登录类别
+            this.nomenu = this.$store.getters.noMenu;
+            //初始化菜单
+            this.routers = JSON.parse(sessionStorage.getItem('routes'));
+            //初始化用户信息
+            this.user = this.$store.getters.userInfo;
+            //判断当前用户是否为万网公司  是就可以使用聊天
+            if(this.user.corporateInfo){
+                this.isChartApp = this.user.corporateInfo.corptype == 'WW' ? true : false;
+            }else{
+                this.isChartApp = false;
+            }
+            this.reloadRouteMenu().
+            initUserAVatar().
+            isPromptLoadTIP().
+            findipgetcity().
+            initVasTheme().
+            fullscreenF11();
+            this.startWorker();
+            this.dynamicRoutingConfig();
+         },
+         mounted() {
+            this.sumenuHover().
+            initNiceScroll();
+         }
+     }
+ </script>

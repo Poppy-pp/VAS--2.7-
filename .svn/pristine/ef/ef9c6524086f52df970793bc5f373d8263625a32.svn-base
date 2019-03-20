@@ -1,0 +1,31 @@
+import { get } from './service'
+import messageList from './messageList'
+
+export default {
+    name: "index",
+    data () {
+        return {
+            activeName: "STAFF_WW",
+            data: []
+        }
+    },
+    mounted () {
+        this.get()
+    },
+    methods: {
+        handleClick () {
+
+        },
+        async get () {
+            try {
+                const {data} = await get({currentPage: 1, showCount: 100})
+                this.data = data.data.records
+            } catch (e) {
+
+            }
+        },
+    },
+    components: {
+        messageList
+    }
+}

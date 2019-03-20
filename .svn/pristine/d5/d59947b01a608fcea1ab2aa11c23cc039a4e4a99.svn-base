@@ -1,0 +1,301 @@
+*, :active, :hover {
+    outline: none!important;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0)!important;
+}
+section.login-gis{
+  font-weight: 400;
+  padding-bottom: 50px;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  text-align: center;
+  min-height: 100vh;
+}
+section.login-gis:before{
+  height: 50%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #4fbf90;
+  content: "";
+  z-index: 0
+}
+
+section.login-gis:after {
+    content: "";
+    vertical-align: middle;
+    display: inline-block;
+    width: 1px;
+    height:100vh;
+}
+section.login-gis .lc-block {
+    background: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    border-radius: 2px;
+    width: 500px;
+    display: inline-block;
+    margin-top: 42px;
+    vertical-align: middle;
+    position: relative;
+}
+section.login-gis .lc-block:not(.lcb-alt) {
+    padding: 19px 55px;
+}
+section.login-gis .lc-block.toggled{
+  z-index: 10;
+}
+section.login-gis h1.lean {
+    color: #7E7E7E;
+    text-align: center;
+    letter-spacing: -0.05em;
+    line-height: 20px;
+    font-size: 22px;
+    margin-bottom: 10px;
+    margin-top: 18px;
+}
+h1.lean:before, h1.lean:after {
+    content: "";
+    height: 1px;
+    position: absolute;
+    top: 47px;
+    width: 32%;
+}
+section.login-gis h1.lean:before {
+    background: rgb(126,126,126);
+    background: -moz-linear-gradient(right,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(right,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -moz-linear-gradient(right,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(right,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: linear-gradient(right,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    left: 0px;
+}
+section.login-gis h1.lean:after {
+    background: rgb(126,126,126);
+    background: -moz-linear-gradient(left,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(left,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -moz-linear-gradient(left,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(left,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    background: linear-gradient(left,rgba(126,126,126,1) 0%,rgba(255,255,255,1) 100%);
+    right: 0px;
+}
+section.login-gis .m-b-20 {
+    margin-bottom: 20px!important;
+}
+section.login-gis .input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+}
+section.login-gis .input-group:not(.input-group-lg):not(.input-group-sm) .input-group-addon:not(.last) {
+    padding-right: 5px;
+}
+section.login-gis .input-group .input-group-addon {
+    vertical-align: bottom;
+    padding: 0;
+}
+section.login-gis .input-group-addon:first-child {
+    border-right: 0;
+}
+section.login-gis .input-group:not(.input-group-lg):not(.input-group-sm) .input-group-addon .zmdi {
+    font-size: 23px;
+}
+section.login-gis .input-group .input-group-addon .zmdi {
+    line-height: 100%;
+}
+section.login-gis .input-group .fg-line {
+    padding: 0 10px;
+}
+section.login-gis .fg-line:not(.form-group) {
+    display: inline-block;
+    width: 100%;
+}
+section.login-gis .fg-line {
+    position: relative;
+    vertical-align: top;
+}
+section.login-gis .fg-line .form-control:not(:disabled) {
+    color: #000;
+}
+section.login-gis .form-control:not(.fc-alt):active, .form-control:not(.fc-alt):focus {
+    border-bottom-color: #b4b4b4;
+}
+section.login-gis .has-error .form-control:focus {
+    border-color: #f99d97;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #fff;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #fff;
+}
+section.login-gis .form-control:not(.fc-alt):active, .form-control:not(.fc-alt):focus {
+    border-bottom-color: #b4b4b4;
+}
+section.login-gis .btn-danger:active:hover, 
+.btn-danger.active:hover, 
+.open > .dropdown-toggle.btn-danger:hover, 
+.btn-danger:active:focus, 
+.btn-danger.active:focus, 
+.open > .dropdown-toggle.btn-danger:focus, 
+.btn-danger:active.focus, 
+.btn-danger.active.focus, 
+.open > .dropdown-toggle.btn-danger.focus {
+    color: #fff;
+    background-color: #c8180b;
+    border-color: #891008;
+}
+section.login-gis .btn:not(.btn-link) {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+section.login-gis .btn-float:not(.m-btn) {
+    position: absolute!important;
+}
+section.login-gis .btn-danger.disabled, .btn-danger[disabled], .btn-danger fieldset[disabled], .btn-danger:hover, .btn-danger:focus, .btn-danger.focus, .btn-danger:active{
+    background-color: #f44336;
+    border-color: #f32c1e;
+}
+section.login-gis .btn-danger:active, .btn-danger.active, .btn-danger .open > .dropdown-toggle{
+  background-image: none;
+  background-color: #d2190b;
+}
+section.login-gis .btn-float {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 45px!important;
+}
+section.login-gis .form-control {
+    display: block;
+    width: 100%;
+    height: 35px;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+section.login-gis .form-control:not(.fc-alt) {
+    box-shadow: none;
+    border: 0;
+    border-bottom: 1px solid #e0e0e0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0;
+}
+section.login-gis .input-group .form-control {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+}
+section.login-gis .input-group-addon, .input-group-btn {
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+section.login-gis .input-group-addon, .input-group-btn, .input-group .form-control {
+    display: table-cell;
+}
+section.login-gis .btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    border-radius: 2px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+section.login-gis .btn-danger {
+    color: #fff;
+    background-color: #4fbf90;
+    border-color: #4fbf90;
+}
+section.login-gis .btn-float {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 42px!important;
+}
+section.login-gis .btn:not(.btn-link) {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+section.login-gis .btn-float:not(.m-btn) {
+    position: absolute!important;
+}
+section.login-gis .lc-block:not(.lcb-alt) .btn-login {
+    top: 50%;
+    margin-top: -25px;
+    right: -25px;
+}
+section.login-gis .fg-line:not(.disabled):after, .fg-line:not(.readonly):after {
+    position: absolute;
+    z-index: 3;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    content: "";
+    -webkit-transition: all;
+    -o-transition: all;
+    transition: all;
+    -webkit-transition-duration: 300ms;
+    transition-duration: 300ms;
+}
+section.login-gis .fg-toggled:not(.readonly):after{
+    width: 100% ;
+    background: #4fbf90;
+}
+section.login-gis i.zmdi1{
+  color:#7E7E7E;
+  font-size:23px;
+  line-height: 27px;
+}
+section.login-gis i.zmdi2{
+  display: inline-block;
+  font-size: 26px;
+  line-height: 100%;
+}
+section.login-gis .btn-danger:active:focus{
+  color: #fff;
+  background-color: #327d5d;
+  border-color: #327d5d;
+}
+section.login-gis .btn:focus, .btn:active:focus{
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+    outline: none!important;
+}
+section.login-gis div.el-form-item{
+  margin:0;
+}
+section.login-gis .el-form-item__content{
+  line-height: 18px;
+}
+/*叶子*/
+.AutomLeaf { position: fixed; opacity: 0; z-index: 0 }
+.AutomLeaffalling { position: fixed; top: 0; left: 0; opacity: 0; z-index: 0 }
+.x1 { width: 75px; height: 75px }
+.x2 { width: 100px; height: 100px }
+.x3 { width: 125px; height: 125px }
+.x4 { width: 150px; height: 150px }

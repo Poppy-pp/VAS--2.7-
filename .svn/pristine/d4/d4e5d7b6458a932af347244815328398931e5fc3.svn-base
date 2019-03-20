@@ -1,0 +1,15 @@
+<template>
+    <section class="tab_content-wrapper yewu">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <el-tab-pane :label="item.groupname" :name="item.groupcode" v-for="item in data" :key="item.id">
+                <message-list :group="item" v-if="activeName === item.groupcode"></message-list>
+            </el-tab-pane>
+        </el-tabs>
+    </section>
+</template>
+
+<script src="./index.js"></script>
+
+<style scoped>
+
+</style>

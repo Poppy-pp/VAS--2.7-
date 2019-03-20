@@ -1,0 +1,241 @@
+<!--* 
+* @description: 外部页面订单页面显示 
+* @author: 王鹏 
+* @update: 王鹏 (2017-05-27) 
+*-->
+<template>
+	<el-row class="rpShowimgDialog">
+		<el-col :span="24" class="showimgDialog1">
+			<div v-if="notext" style="text-align: center;color: #555;">
+				<span class="iconfont icon-notfind01" style="font-size:8rem;dispaly:block;color:#555"></span>
+				<p>{{ notext }}</p>
+			</div>
+			<div class="formdetail" v-else style="padding:0 20px;">
+				<el-row class="mt5">
+					<el-col :span="24">
+						<span class="formTile">安装信息</span>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>客户公司:</dt>
+							<dd v-if="ruleFormStatic.corporateInfo">{{ ruleFormStatic.corporateInfo.corpname }}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>处理人:</dt>
+							<dd v-if="ruleFormStatic.corporateInfo">{{ ruleFormStatic.corporateInfo.employeename}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>订单类型:</dt>
+							<dd>{{ ruleFormStatic.declaretype}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>订单号:</dt>
+							<dd>{{ ruleFormStatic.orderno}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>车主:</dt>
+							<dd v-if="ruleFormStatic.ownerInfo">{{ ruleFormStatic.ownerInfo.name}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>电话:</dt>
+							<dd v-if="ruleFormStatic.ownerInfo">{{ ruleFormStatic.ownerInfo.mobile}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>车架号:</dt>
+							<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.vin}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>车牌号:</dt>
+							<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.licenseplatenum}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>是否有保险:</dt>
+							<dd v-if="ruleFormStatic.vehicleInfo">{{ ruleFormStatic.vehicleInfo.hastheftinsurance == 1?"有":"没有"}}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>安装小组:</dt>
+							<dd v-if="ruleFormStatic.installGroupInfo">{{ ruleFormStatic.installGroupInfo.groupname }}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>安装人员:</dt>
+							<dd v-if="ruleFormStatic.installEmployee">{{ ruleFormStatic.installEmployee.employeename }}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="8">
+						<dl class="dllist">
+							<dt>安装时间:</dt>
+							<dd>{{ ruleFormStatic.installapplydate }}</dd>
+						</dl>
+					</el-col>
+					<el-col :span="16">
+						<dl class="dllist">
+							<dt>安装地址:</dt>
+							<dd>{{ ruleFormStatic.installaddress}}</dd>
+						</dl>
+					</el-col>
+				</el-row>
+				<template v-for="(item,index) in ruleFormStatic.installDetails">
+					<el-row class="mt5">
+						<el-col :span="24">
+							<span class="formTile">{{item.packInfo.E_PRODTYPE+'设备'+item.packInfo.E_PRODMODEL}}</span>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>安装位置:</dt>
+								<dd>{{ item.installpositionname }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>设备初始状态:</dt>
+								<dd>{{ item.onlinestatus ? '上线' : '未上线' }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>设备ID:</dt>
+								<dd>{{ item.packInfo.E_PRODUNUM }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>设备类型:</dt>
+								<dd>{{ item.packInfo.E_PRODTYPE }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>设备型号:</dt>
+								<dd>{{ item.packInfo.E_PRODMODEL }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>SIM卡号:</dt>
+								<dd>{{ item.packInfo.C_PRODUNUM }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>iccid:</dt>
+								<dd>{{ item.packInfo.SIMCARDID }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="8">
+							<dl class="dllist">
+								<dt>卡类型:</dt>
+								<dd>{{ item.packInfo.C_PRODMODEL }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="24">
+							<dl class="dllist">
+								<dt>设备备注:</dt>
+								<dd>{{ item.remark }}</dd>
+							</dl>
+						</el-col>
+						<el-col :span="24">
+							<dl class="dllist lh55_mb10">
+								<dt>设备拍照信息:</dt>
+								<dd>
+									<img width="60" height="60" v-for="(item,index) in item.pictures" :title="item.picdesc" class="image" :src="$store.state.IMG_URL+item.piclink">
+								</dd>
+							</dl>
+						</el-col>
+					</el-row>
+				</template>
+			</div>
+		</el-col>
+	</el-row>
+</template>
+<style type="text/css">
+	@import '/static/css/common.css';
+	@import '../businessManage/css/customerDeclaration.css';
+	@import '/static/css/style.css';
+</style>
+<script>
+	import '../../../static/js/viewer-jquery.min';
+	import { getOrderOutInfo } from '../../api/api';
+	export default {
+		data() {
+			return {
+				notext: '',
+				ruleFormStatic: {
+					vehicleInfo: {
+						model: '',
+						color: '',
+						licenseplatenum: '',
+						vin: '',
+						price: '',
+						yearsofservice: '',
+						receivingbank: {}
+					},
+					ownerInfo: {
+						name: '',
+						idcard: '',
+						mobile: ''
+					},
+					corporateInfo: {},
+					flowData: {
+						verify_result: '',
+						apply_remark: ''
+					},
+					installEmployee: {
+						employeename: ''
+					},
+					installGroupInfo: {
+						groupname: ''
+					},
+					insuranceInfo: {}
+				}
+			};
+		},
+		created() {
+			let para = {
+				id: this.$route.query.id,
+				vehicleId: this.$route.query.vehicleId,
+				orderno: this.$route.query.orderno
+			}
+			getOrderOutInfo(para).then((res) => {
+				if(res.data.result.code == 0) {
+					this.ruleFormStatic = res.data.data;
+					if(res.data.data.length == 0) {
+						this.notext = "没有找到项目编号下的订单信息！";
+					}
+				} else {
+					this.$message({
+						message: response.data.result.desc,
+						type: 'error'
+					});
+				}
+			});
+		},
+		mounted() {
+			//初始化图片查看器
+			$("div.rpShowimgDialog").on("click", ".image", function(e) {
+				$("div.rpShowimgDialog").viewer({
+					zIndex: 999999999
+				});
+			});
+		}
+	}
+</script>
